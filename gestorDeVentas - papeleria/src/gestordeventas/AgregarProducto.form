@@ -298,7 +298,7 @@
                                           <Component id="etqCodigoProducto" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
                                           <Component id="etqAgregarProducto" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -324,7 +324,7 @@
                           <Component id="jLabel2" min="-2" pref="68" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                           <Component id="etqAgregarProducto" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
