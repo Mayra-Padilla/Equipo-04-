@@ -15,16 +15,19 @@ import javax.swing.JOptionPane;
 import java.sql.Statement;
 import javax.swing.InputMap;
 import javax.swing.KeyStroke;
+
 /**
  *
  * @author mayra
  */
 public class Login extends javax.swing.JFrame {
+
     //La variable cin realizara la interaccion con la BD
     Connection cin = conexion.getConexion();
     //ps sera la variable que utilizaremps para ejecutar updates
     PreparedStatement ps;
     private java.awt.Robot robot = null;
+
     //Este constructor se encarga de inicializar todos los comoponentes necesarios
     public Login() {
         initComponents();
@@ -202,42 +205,42 @@ public class Login extends javax.swing.JFrame {
     private void btnProbarConexionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProbarConexionActionPerformed
         // TODO add your handling code here:
         gestordeventas.Conexion.conexion.getConexion();
-        JOptionPane.showMessageDialog(this,"¡¡¡Conexión exitosa!!!");
+        JOptionPane.showMessageDialog(this, "¡¡¡Conexión exitosa!!!");
     }//GEN-LAST:event_btnProbarConexionActionPerformed
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-        // TODO add your handling code here:
-        //Obtenemos el texto dentro de cada caja de texto
-        try{
-            String usuario = txtUsuario.getText();
-            String contrasenia = txtCampoContrasenia.getText();
-            //declaramos la consulta para checar si existe el usuario y el pass
-            String consulta = "SELECT claveLogin, pass FROM login WHERE claveLogin ="+usuario+" AND pass ="+contrasenia;
-            //declaramos las variables para ejecutar las consultas
-            Statement st = cin.createStatement();
-            ResultSet rs = st.executeQuery(consulta);
-            String sesion = "UPDATE login SET activo = 1 WHERE claveLogin =" +usuario;
-            ps = cin.prepareStatement(sesion);
-            //el ciclo recorrera los renglones y los if checaran que estos no esten vacios
-            while(rs.next()){
-                if (rs.getString("claveLogin") != null) {
-                    if (rs.getString("pass") != null) {
-                        //ejecutamos la actualizacion para activar sesion
-                        ps.executeUpdate();
-                        //cerramos la ventana actual y abrimos la ventana prueba
-                        Prueba obj = new Prueba();
-                        obj.setVisible(true);
-                        this.dispose();
-                    }
-                }
-            }
-        } catch (SQLException ex) {  
-            JOptionPane.showMessageDialog(this, "El usuario o la contraseña son incorrectos",
-                                            "Error",JOptionPane.ERROR_MESSAGE);
-        } 
-        //limpiamos las cajas de texto
-        txtUsuario.setText(null);
-        txtCampoContrasenia.setText("");
+//        // TODO add your handling code here:
+//        //Obtenemos el texto dentro de cada caja de texto
+//        try{
+//            String usuario = txtUsuario.getText();
+//            String contrasenia = txtCampoContrasenia.getText();
+//            //declaramos la consulta para checar si existe el usuario y el pass
+//            String consulta = "SELECT claveLogin, pass FROM login WHERE claveLogin ="+usuario+" AND pass ="+contrasenia;
+//            //declaramos las variables para ejecutar las consultas
+//            Statement st = cin.createStatement();
+//            ResultSet rs = st.executeQuery(consulta);
+//            String sesion = "UPDATE login SET activo = 1 WHERE claveLogin =" +usuario;
+//            ps = cin.prepareStatement(sesion);
+//            //el ciclo recorrera los renglones y los if checaran que estos no esten vacios
+//            while(rs.next()){
+//                if (rs.getString("claveLogin") != null) {
+//                    if (rs.getString("pass") != null) {
+//                        //ejecutamos la actualizacion para activar sesion
+//                        ps.executeUpdate();
+//                        //cerramos la ventana actual y abrimos la ventana prueba
+        Menu obj = new Menu();
+        obj.setVisible(true);
+        this.dispose();
+//                    }
+//                }
+//            }
+//        } catch (SQLException ex) {  
+//            JOptionPane.showMessageDialog(this, "El usuario o la contraseña son incorrectos",
+//                                            "Error",JOptionPane.ERROR_MESSAGE);
+//        } 
+//        //limpiamos las cajas de texto
+//        txtUsuario.setText(null);
+//        txtCampoContrasenia.setText("");
     }//GEN-LAST:event_btnEntrarActionPerformed
 
     /**

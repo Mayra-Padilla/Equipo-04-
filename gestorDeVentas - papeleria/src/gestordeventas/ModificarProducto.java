@@ -17,17 +17,16 @@ import javax.swing.JOptionPane;
  *
  * @author mayra
  */
-public class AgregarProducto extends javax.swing.JFrame {
+public class ModificarProducto extends javax.swing.JFrame {
 //    Connection cin = conexion.getConexion();
 //    PreparedStatement ps;
-
     /**
      * Creates new form Producto
      */
-    public AgregarProducto() {
+    public ModificarProducto() {
         initComponents();
-        setTitle(".:: Agregar producto ::.");
-        setDefaultCloseOperation(Inventario.DISPOSE_ON_CLOSE);
+        setTitle(".:: Modificar producto ::.");
+        setDefaultCloseOperation(ModificarProducto.DISPOSE_ON_CLOSE);
 //        getContentPane().setLayout(null);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -226,7 +225,7 @@ public class AgregarProducto extends javax.swing.JFrame {
             }
         });
 
-        btnAgregarProducto.setText("Agregar");
+        btnAgregarProducto.setText("Actualizar");
         btnAgregarProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarProductoActionPerformed(evt);
@@ -248,7 +247,7 @@ public class AgregarProducto extends javax.swing.JFrame {
         etqNombreProducto.setText("Nombre:");
 
         etqAgregarProducto.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        etqAgregarProducto.setText("Agregar producto");
+        etqAgregarProducto.setText("Modificar producto");
 
         jPanel13.setBackground(new java.awt.Color(99, 145, 239));
 
@@ -445,7 +444,7 @@ public class AgregarProducto extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
 //        this.dispose();
-
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
