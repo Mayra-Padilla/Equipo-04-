@@ -201,8 +201,9 @@ public class Login extends javax.swing.JFrame {
 
     private void btnProbarConexionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProbarConexionActionPerformed
         // TODO add your handling code here:
-        gestordeventas.Conexion.conexion.getConexion();
-        JOptionPane.showMessageDialog(this, "¡¡¡Conexión exitosa!!!");
+//        gestordeventas.Conexion.conexion.getConexion();
+//        JOptionPane.showMessageDialog(this, "¡¡¡Conexión exitosa!!!");
+        System.exit(0);
     }//GEN-LAST:event_btnProbarConexionActionPerformed
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
