@@ -118,7 +118,7 @@ public class AgregarUsuario extends javax.swing.JFrame {
 
         jLabel4.setText("Contraseña:");
 
-        btnVolverMenu.setText("Regresar");
+        btnVolverMenu.setText("Cancelar");
         btnVolverMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVolverMenuActionPerformed(evt);
