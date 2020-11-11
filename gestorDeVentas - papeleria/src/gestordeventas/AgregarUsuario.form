@@ -73,8 +73,8 @@
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                       <Component id="txtApellidoMaterno" max="32767" attributes="0"/>
                                       <Component id="txtApellidoPaterno" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jTextField1" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jTextField2" alignment="0" min="-2" pref="271" max="-2" attributes="0"/>
+                                      <Component id="txtUsuario" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="txtContrasena" alignment="0" min="-2" pref="271" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -127,12 +127,12 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextField1" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtUsuario" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextField2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtContrasena" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Component id="btnAgregarUsuario" min="-2" pref="38" max="-2" attributes="0"/>
@@ -254,14 +254,14 @@
             <Property name="text" type="java.lang.String" value="Usuario:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField1">
+        <Component class="javax.swing.JTextField" name="txtUsuario">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Contrase&#xf1;a:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField2">
+        <Component class="javax.swing.JTextField" name="txtContrasena">
         </Component>
       </SubComponents>
     </Container>

@@ -6,8 +6,10 @@
 package gestordeventas;
 
 import gestordeventas.Conexion.conexion;
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -16,7 +18,7 @@ import javax.swing.JOptionPane;
  */
 public class AgregarUsuario extends javax.swing.JFrame {
   conexion conecion = new conexion();
-  Connection cin =  conecion.getConexion() ;
+  Connection cin =  conexion.getConexion() ;
    PreparedStatement ps;
     /**
      * Creates new form AgregarUsuario
@@ -44,9 +46,9 @@ public class AgregarUsuario extends javax.swing.JFrame {
         jPanel14 = new javax.swing.JPanel();
         jPanel15 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtUsuario = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtContrasena = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -143,8 +145,8 @@ public class AgregarUsuario extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(txtApellidoMaterno)
                                     .addComponent(txtApellidoPaterno, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtContrasena, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(121, 121, 121)
                         .addComponent(btnAgregarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -182,11 +184,11 @@ public class AgregarUsuario extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnAgregarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(26, Short.MAX_VALUE))
@@ -210,7 +212,29 @@ public class AgregarUsuario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarUsuarioActionPerformed
-      
+       try {
+            String nombre = txtNombreUsuario.getText();
+            String apellido_paterno = txtApellidoPaterno.getText();
+            String apellido_materno = txtApellidoMaterno.getText();
+            String usuario = txtUsuario.getText();
+            String contrasena = txtContrasena.getText();
+            
+            String consulta = "INSERT INTO Usuario (Nombre, Apellido_Paterno, Apellido_Materno, Usuario, Contrasena)\n" +
+                              "VALUES ("+nombre+", '"+apellido_paterno+"', '"+apellido_materno+"', "+usuario+", "+contrasena+")";
+            ps = cin.prepareStatement(consulta);
+            if(ps.executeUpdate() > 0){
+                JOptionPane.showMessageDialog(this, "Usuario agregado con exito");
+            }else{
+                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)","Error",JOptionPane.ERROR_MESSAGE);
+            }      
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)");
+        }
+        txtNombreUsuario.setText(null);
+        txtApellidoPaterno.setText(null);
+        txtApellidoMaterno.setText(null);
+        txtUsuario.setText(null);
+        txtContrasena.setText(null);
     }//GEN-LAST:event_btnAgregarUsuarioActionPerformed
 
     /**
@@ -229,19 +253,16 @@ public class AgregarUsuario extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AgregarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AgregarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AgregarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AgregarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+      //</editor-fold>
+      
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new AgregarUsuario().setVisible(true);
             }
@@ -261,10 +282,10 @@ public class AgregarUsuario extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField txtApellidoMaterno;
     private javax.swing.JTextField txtApellidoPaterno;
+    private javax.swing.JTextField txtContrasena;
     private javax.swing.JTextField txtNombreUsuario;
+    private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }
