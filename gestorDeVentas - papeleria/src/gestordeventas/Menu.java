@@ -171,7 +171,7 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/papeleria2.jpg"))); // NOI18N
 
-        btnAgregarUsuario.setText("Agregar Usuario");
+        btnAgregarUsuario.setText("Agregar usuario");
         btnAgregarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarUsuarioActionPerformed(evt);
