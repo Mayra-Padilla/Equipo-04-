@@ -17,17 +17,18 @@ import javax.swing.JOptionPane;
  * @author mayra
  */
 public class AgregarUsuario extends javax.swing.JFrame {
-  conexion conecion = new conexion();
-  Connection cin =  conexion.getConexion() ;
-   PreparedStatement ps;
+
+    conexion conecion = new conexion();
+    Connection cin = conexion.getConexion();
+    PreparedStatement ps;
+
     /**
      * Creates new form AgregarUsuario
      */
     public AgregarUsuario() {
         initComponents();
     }
-    
-   
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -212,29 +213,46 @@ public class AgregarUsuario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarUsuarioActionPerformed
-       try {
-            String nombre = txtNombreUsuario.getText();
-            String apellido_paterno = txtApellidoPaterno.getText();
-            String apellido_materno = txtApellidoMaterno.getText();
-            String usuario = txtUsuario.getText();
-            String contrasena = txtContrasena.getText();
-            
-            String consulta = "INSERT INTO Usuario (Nombre, Apellido_Paterno, Apellido_Materno, Usuario, Contrasena)\n" +
-                              "VALUES ("+nombre+", '"+apellido_paterno+"', '"+apellido_materno+"', "+usuario+", "+contrasena+")";
-            ps = cin.prepareStatement(consulta);
-            if(ps.executeUpdate() > 0){
-                JOptionPane.showMessageDialog(this, "Usuario agregado con exito");
-            }else{
-                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)","Error",JOptionPane.ERROR_MESSAGE);
-            }      
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)");
+        String nombre = txtNombreUsuario.getText();
+        String apellido_paterno = txtApellidoPaterno.getText();
+        String apellido_materno = txtApellidoMaterno.getText();
+        String usuario = txtUsuario.getText();
+        String contrasena = txtContrasena.getText();
+
+        if (nombre.length() > 31 || nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtNombreUsuario.requestFocus();
+        } else if (apellido_paterno.length() > 31 || apellido_paterno.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El Apellido Paterno es obligatorio (Maximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtApellidoPaterno.requestFocus();
+        } else if (apellido_materno.length() > 31 || apellido_materno.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El Apeliido Materno es obligatorio (Maximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtApellidoMaterno.requestFocus();
+        } else if (usuario.length() > 9 || usuario.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El Usuario es obligatorio (Maximo 8 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtUsuario.requestFocus();
+        } else if (contrasena.length() > 8 || contrasena.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "La Contraseña es obligatoria (Maximo 8 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtContrasena.requestFocus();
+        } else {
+            try {
+                String consulta = "INSERT INTO Usuario (Nombre, Apellido_Paterno, Apellido_Materno, Usuario, Contrasena)"
+                        + "VALUES ('" + nombre + "', '" + apellido_paterno + "', '" + apellido_materno + "', '" + usuario + "', '" + contrasena + "')";
+                ps = cin.prepareStatement(consulta);
+                if (ps.executeUpdate() > 0) {
+                    JOptionPane.showMessageDialog(this, "Usuario agregado con exito");
+                    txtNombreUsuario.setText(null);
+                    txtApellidoPaterno.setText(null);
+                    txtApellidoMaterno.setText(null);
+                    txtUsuario.setText(null);
+                    txtContrasena.setText(null);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (HeadlessException | SQLException e) {
+                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
-        txtNombreUsuario.setText(null);
-        txtApellidoPaterno.setText(null);
-        txtApellidoMaterno.setText(null);
-        txtUsuario.setText(null);
-        txtContrasena.setText(null);
     }//GEN-LAST:event_btnAgregarUsuarioActionPerformed
 
     /**
@@ -256,8 +274,8 @@ public class AgregarUsuario extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AgregarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-      //</editor-fold>
-      
+        //</editor-fold>
+
         //</editor-fold>
 
         /* Create and display the form */
