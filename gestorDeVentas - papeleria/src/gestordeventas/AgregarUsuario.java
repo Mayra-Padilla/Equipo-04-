@@ -230,19 +230,23 @@ public class AgregarUsuario extends javax.swing.JFrame {
         String usuario = txtUsuario.getText();
         String contrasena = txtContrasena.getText();
 
-        if (nombre.length() > 31 || nombre.isEmpty()) {
+        apellido_paterno = apellido_paterno.replaceAll(" ", "");
+        apellido_materno = apellido_materno.replaceAll(" ", "");
+        usuario = usuario.replaceAll(" ", "");
+
+        if (nombre.length() > 31 || nombre.length() == 0) {
             JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtNombreUsuario.requestFocus();
-        } else if (apellido_paterno.length() > 31 || apellido_paterno.isEmpty()) {
+        } else if (apellido_paterno.length() > 31 || apellido_paterno.length() == 0) {
             JOptionPane.showMessageDialog(this, "El Apellido Paterno es obligatorio (Maximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtApellidoPaterno.requestFocus();
-        } else if (apellido_materno.length() > 31 || apellido_materno.isEmpty()) {
+        } else if (apellido_materno.length() > 31 || apellido_materno.length() == 0) {
             JOptionPane.showMessageDialog(this, "El Apeliido Materno es obligatorio (Maximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtApellidoMaterno.requestFocus();
-        } else if (usuario.length() > 9 || usuario.isEmpty()) {
+        } else if (usuario.length() > 9 || usuario.length() == 0) {
             JOptionPane.showMessageDialog(this, "El Usuario es obligatorio (Maximo 8 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtUsuario.requestFocus();
-        } else if (contrasena.length() > 8 || contrasena.isEmpty()) {
+        } else if (contrasena.length() > 8 || contrasena.length() == 0) {
             JOptionPane.showMessageDialog(this, "La Contraseña es obligatoria (Maximo 8 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtContrasena.requestFocus();
         } else {
