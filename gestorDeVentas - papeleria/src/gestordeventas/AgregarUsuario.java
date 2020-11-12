@@ -27,7 +27,7 @@ public class AgregarUsuario extends javax.swing.JFrame {
      */
     public AgregarUsuario() {
         initComponents();
-        setTitle(".:: Agregar usuarios ::.");
+        setTitle(".:: Agregar usuario ::.");
         setDefaultCloseOperation(AgregarUsuario.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
