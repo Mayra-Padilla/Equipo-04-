@@ -226,7 +226,7 @@ public class AgregarProducto extends javax.swing.JFrame {
             }
         });
 
-        btnAgregarProducto.setText("Actualizar");
+        btnAgregarProducto.setText("Agregar");
         btnAgregarProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarProductoActionPerformed(evt);
