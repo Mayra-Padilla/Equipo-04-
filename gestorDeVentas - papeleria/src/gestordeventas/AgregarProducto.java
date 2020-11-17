@@ -414,7 +414,7 @@ public class AgregarProducto extends javax.swing.JFrame {
 
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
         // TODO add your handling code here:
-        
+
         Date date = new Date();
         String fecha = new SimpleDateFormat("yyyy-MM-dd").format(date);
         String codigoProducto = txtCodigoProducto.getText();
@@ -427,8 +427,10 @@ public class AgregarProducto extends javax.swing.JFrame {
         compra = compra.trim();
         venta = venta.trim();
         existencias = existencias.trim();
-
-        if (nombreproducto.length() > 51 || nombreproducto.length() == 0) {
+        if (!isNumeric(codigoProducto)) {
+            JOptionPane.showMessageDialog(this, "El Codigo producto es obligatorio (Solo Numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtCodigoProducto.requestFocus();
+        } else if (nombreproducto.length() > 51 || nombreproducto.length() == 0) {
             JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtNombreProducto.requestFocus();
         } else if (isNumeric(codigoProducto) == false || codigoProducto.length() == 0) {
@@ -443,7 +445,7 @@ public class AgregarProducto extends javax.swing.JFrame {
         } else if (isDouble(venta) == false || venta.length() == 0) {
             JOptionPane.showMessageDialog(this, "El Precio de venta es obligatorio (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
             txtPrecioVenta.requestFocus();
-        } else if (descripcion.length() > 36 || descripcion.length() == 0) {
+        } else if (descripcion.length() > 36) {
             JOptionPane.showMessageDialog(this, "La descripción tiene un maximo de 35 caracteres", "Error", JOptionPane.ERROR_MESSAGE);
             txtDescripcion.requestFocus();
         } else {
@@ -452,7 +454,7 @@ public class AgregarProducto extends javax.swing.JFrame {
                         + ",'" + nombreproducto + "',"
                         + existencias + "," + compra + ","
                         + venta + ",'" + descripcion
-                        + "','"+fecha+"')";
+                        + "','" + fecha + "')";
                 ps = cin.createStatement();
                 if (!ps.execute(consulta)) {
                     JOptionPane.showMessageDialog(this, "Producto agregado con éxito");
@@ -462,13 +464,9 @@ public class AgregarProducto extends javax.swing.JFrame {
                     txtDescripcion.setText(null);
                     txtPrecioCompra.setText(null);
                     txtPrecioVenta.setText(null);
-                    Menu menu = new Menu();
-                    menu.setVisible(true);
-                    this.dispose();
-
                 } else {
                     JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
-                    
+
                 }
             } catch (HeadlessException | NumberFormatException | SQLException e) {
                 JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
