@@ -451,7 +451,7 @@ public class ModificarProducto extends javax.swing.JFrame {
         } else if (isDouble(venta) == false || venta.length() == 0) {
             JOptionPane.showMessageDialog(this, "El Precio de venta es obligatorio (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
             txtPrecioVenta.requestFocus();
-        } else if (descripcion.length() > 36 || descripcion.length() == 0) {
+        } else if (descripcion.length() > 36) {
             JOptionPane.showMessageDialog(this, "La descripción tiene un maximo de 35 caracteres", "Error", JOptionPane.ERROR_MESSAGE);
             txtDescripcion.requestFocus();
         } else {
