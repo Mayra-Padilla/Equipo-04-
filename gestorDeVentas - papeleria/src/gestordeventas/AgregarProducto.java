@@ -6,11 +6,14 @@
 package gestordeventas;
 
 import gestordeventas.Conexion.conexion;
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,8 +21,10 @@ import javax.swing.JOptionPane;
  * @author mayra
  */
 public class AgregarProducto extends javax.swing.JFrame {
-//    Connection cin = conexion.getConexion();
-//    PreparedStatement ps;
+
+    conexion conexion = new conexion();
+    Connection cin = conexion.getConexion();
+    Statement ps;
 
     /**
      * Creates new form Producto
@@ -53,7 +58,7 @@ public class AgregarProducto extends javax.swing.JFrame {
         jPanel12 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         txtExistencias = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        botonCancelar = new javax.swing.JButton();
         etxExistencias = new javax.swing.JLabel();
         txtNombreProducto = new javax.swing.JTextField();
         txtCodigoProducto = new javax.swing.JTextField();
@@ -211,10 +216,10 @@ public class AgregarProducto extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton1.setText("Cancelar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        botonCancelar.setText("Cancelar");
+        botonCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                botonCancelarActionPerformed(evt);
             }
         });
 
@@ -339,7 +344,7 @@ public class AgregarProducto extends javax.swing.JFrame {
                         .addGap(154, 154, 154)
                         .addComponent(btnAgregarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(41, 41, 41)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(botonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -375,7 +380,7 @@ public class AgregarProducto extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAgregarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(botonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(19, 19, 19))
             .addComponent(jPanel13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -396,11 +401,12 @@ public class AgregarProducto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        //        this.dispose();
+    private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
+        Menu menu = new Menu();
+        menu.setVisible(true);
+        this.dispose();
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_botonCancelarActionPerformed
 
     private void txtNombreProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreProductoActionPerformed
         // TODO add your handling code here:
@@ -408,38 +414,86 @@ public class AgregarProducto extends javax.swing.JFrame {
 
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
         // TODO add your handling code here:
-        //        try {
-            //            String codigoProducto = txtCodigoProducto.getText();
-            //            String existencias = txtExistencias.getText();
-            //            int cantidadExistencias = Integer.parseInt(existencias);
-            //
-            //            String nombreProducto = txtNombreProducto.getText();
-            //            String compra = txtPrecioCompra.getText();
-            //            int precioCompra = Integer.parseInt(compra);
-            //
-            //            String venta = txtPrecioVenta.getText();
-            //            int precioVenta = Integer.parseInt(venta);
-            //
-            //            String descripcion = txtDescripcion.getText();
-            //
-            //            String consulta = "INSERT INTO producto (existencias, descripcion, nombreProducto, precioVenta, precioCompra)\n" +
-            //                              "VALUES ("+cantidadExistencias+", '"+descripcion+"', '"+nombreProducto+"', "+precioVenta+", "+precioCompra+")";
-            //            ps = cin.prepareStatement(consulta);
-            //            if(ps.executeUpdate() > 0){
-                //                JOptionPane.showMessageDialog(this, "Producto insertado correctamente");
-                //            }else{
-                //                JOptionPane.showMessageDialog(this, "Producto no insertado, revise los campos","Error",JOptionPane.ERROR_MESSAGE);
-                //            }
-            //        } catch (Exception e) {
-            //            JOptionPane.showMessageDialog(this, "Revise campos, alguno de los datos preoporcionados no es correcto");
-            //        }
-        //        txtCodigoProducto.setText(null);
-        //        txtExistencias.setText(null);
-        //        txtNombreProducto.setText(null);
-        //        txtDescripcion.setText(null);
-        //        txtPrecioCompra.setText(null);
-        //        txtPrecioVenta.setText(null);
+        
+        Date date = new Date();
+        String fecha = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        String codigoProducto = txtCodigoProducto.getText();
+        String nombreproducto = txtNombreProducto.getText();
+        String existencias = txtExistencias.getText();
+        String compra = txtPrecioCompra.getText();
+        String venta = txtPrecioVenta.getText();
+        String descripcion = txtDescripcion.getText();
+
+        compra = compra.trim();
+        venta = venta.trim();
+        existencias = existencias.trim();
+
+        if (nombreproducto.length() > 51 || nombreproducto.length() == 0) {
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtNombreProducto.requestFocus();
+        } else if (isNumeric(codigoProducto) == false || codigoProducto.length() == 0) {
+            JOptionPane.showMessageDialog(this, "El código del producto es obligatorio (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtExistencias.requestFocus();
+        } else if (isNumeric(existencias) == false || existencias.length() == 0) {
+            JOptionPane.showMessageDialog(this, "Las Existencias son obligatorias (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtExistencias.requestFocus();
+        } else if (isDouble(compra) == false || compra.length() == 0) {
+            JOptionPane.showMessageDialog(this, "El Precio de compra es obligatorio (Solo numeros) ", "Error", JOptionPane.ERROR_MESSAGE);
+            txtPrecioCompra.requestFocus();
+        } else if (isDouble(venta) == false || venta.length() == 0) {
+            JOptionPane.showMessageDialog(this, "El Precio de venta es obligatorio (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtPrecioVenta.requestFocus();
+        } else if (descripcion.length() > 36 || descripcion.length() == 0) {
+            JOptionPane.showMessageDialog(this, "La descripción tiene un maximo de 35 caracteres", "Error", JOptionPane.ERROR_MESSAGE);
+            txtDescripcion.requestFocus();
+        } else {
+            try {
+                String consulta = "INSERT INTO Materiales VALUES (" + codigoProducto
+                        + ",'" + nombreproducto + "',"
+                        + existencias + "," + compra + ","
+                        + venta + ",'" + descripcion
+                        + "','"+fecha+"')";
+                ps = cin.createStatement();
+                if (!ps.execute(consulta)) {
+                    JOptionPane.showMessageDialog(this, "Producto agregado con éxito");
+                    txtCodigoProducto.setText(null);
+                    txtExistencias.setText(null);
+                    txtNombreProducto.setText(null);
+                    txtDescripcion.setText(null);
+                    txtPrecioCompra.setText(null);
+                    txtPrecioVenta.setText(null);
+                    Menu menu = new Menu();
+                    menu.setVisible(true);
+                    this.dispose();
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+                    
+                }
+            } catch (HeadlessException | NumberFormatException | SQLException e) {
+                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        }
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
+
+    private boolean isNumeric(String cad) {
+        try {
+            Integer.parseInt(cad);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
+    private boolean isDouble(String cad) {
+        try {
+            Double.parseDouble(cad);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -478,6 +532,7 @@ public class AgregarProducto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonCancelar;
     private javax.swing.JButton btnAgregarProducto;
     private javax.swing.JLabel etqAgregarProducto;
     private javax.swing.JLabel etqCodigoProducto;
@@ -486,7 +541,6 @@ public class AgregarProducto extends javax.swing.JFrame {
     private javax.swing.JLabel etqPrecioCompra;
     private javax.swing.JLabel etqPrecioVenta;
     private javax.swing.JLabel etxExistencias;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
