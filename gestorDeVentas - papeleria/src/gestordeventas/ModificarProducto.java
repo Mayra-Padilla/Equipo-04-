@@ -435,9 +435,11 @@ public class ModificarProducto extends javax.swing.JFrame {
         String venta = txtPrecioVenta.getText();
         String descripcion = txtDescripcion.getText();
 
-        existencias = existencias.replaceAll(" ", "");
-        compra = compra.replaceAll(" ", "");
-        venta = venta.replaceAll(" ", "");
+        nombreproducto = nombreproducto.trim();
+        existencias = existencias.trim();
+        compra = compra.trim();
+        venta = venta.trim();
+        descripcion = descripcion.trim();
 
         if (nombreproducto.length() > 51 || nombreproducto.length() == 0) {
             JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
