@@ -234,9 +234,11 @@ public class AgregarUsuario extends javax.swing.JFrame {
         String usuario = txtUsuario.getText();
         String contrasena = txtContrasena.getText();
 
-        apellido_paterno = apellido_paterno.replaceAll(" ", "");
-        apellido_materno = apellido_materno.replaceAll(" ", "");
-        usuario = usuario.replaceAll(" ", "");
+        nombre = nombre.trim();
+        apellido_paterno = apellido_paterno.trim();
+        apellido_materno = apellido_materno.trim();
+        usuario = usuario.trim();
+        contrasena = contrasena.trim();
 
         if (nombre.length() > 31 || nombre.length() == 0) {
             JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
