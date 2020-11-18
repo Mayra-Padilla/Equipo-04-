@@ -22,7 +22,7 @@ public class Login extends javax.swing.JFrame {
     Connection cin = conexion.getConexion();
     PreparedStatement ps;
     ResultSet rs;
-    public String usuario;
+    public static String usuario;
 
     public Login() {
         initComponents();
