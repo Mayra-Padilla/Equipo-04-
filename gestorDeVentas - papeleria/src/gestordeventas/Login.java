@@ -6,15 +6,11 @@
 package gestordeventas;
 
 import gestordeventas.Conexion.*;
-import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-import java.sql.Statement;
-import javax.swing.InputMap;
-import javax.swing.KeyStroke;
 
 /**
  *
@@ -22,13 +18,11 @@ import javax.swing.KeyStroke;
  */
 public class Login extends javax.swing.JFrame {
 
-    //La variable cin realizara la interaccion con la BD
+    conexion conecion = new conexion();
     Connection cin = conexion.getConexion();
-    //ps sera la variable que utilizaremps para ejecutar updates
     PreparedStatement ps;
-    private java.awt.Robot robot = null;
+    ResultSet rs;
 
-    //Este constructor se encarga de inicializar todos los comoponentes necesarios
     public Login() {
         initComponents();
     }
@@ -43,7 +37,7 @@ public class Login extends javax.swing.JFrame {
         etqNombreUsuario = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JTextField();
         etqContrasenia = new javax.swing.JLabel();
-        txtCampoContrasenia = new javax.swing.JPasswordField();
+        txtCampoContrasena = new javax.swing.JPasswordField();
         btnEntrar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -62,7 +56,19 @@ public class Login extends javax.swing.JFrame {
 
         etqNombreUsuario.setText("Usuario:");
 
+        txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtUsuarioKeyTyped(evt);
+            }
+        });
+
         etqContrasenia.setText("Contraseña:");
+
+        txtCampoContrasena.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCampoContrasenaKeyTyped(evt);
+            }
+        });
 
         btnEntrar.setText("Entrar");
         btnEntrar.addActionListener(new java.awt.event.ActionListener() {
@@ -135,7 +141,7 @@ public class Login extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(etqContrasenia)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCampoContrasenia)
+                        .addComponent(txtCampoContrasena)
                         .addGap(43, 43, 43))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 20, Short.MAX_VALUE)
@@ -173,7 +179,7 @@ public class Login extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(etqContrasenia)
-                            .addComponent(txtCampoContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtCampoContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(btnEntrar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -206,38 +212,52 @@ public class Login extends javax.swing.JFrame {
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
 //        // TODO add your handling code here:
-//        //Obtenemos el texto dentro de cada caja de texto
-//        try{
-//            String usuario = txtUsuario.getText();
-//            String contrasenia = txtCampoContrasenia.getText();
-//            //declaramos la consulta para checar si existe el usuario y el pass
-//            String consulta = "SELECT claveLogin, pass FROM login WHERE claveLogin ="+usuario+" AND pass ="+contrasenia;
-//            //declaramos las variables para ejecutar las consultas
-//            Statement st = cin.createStatement();
-//            ResultSet rs = st.executeQuery(consulta);
-//            String sesion = "UPDATE login SET activo = 1 WHERE claveLogin =" +usuario;
-//            ps = cin.prepareStatement(sesion);
-//            //el ciclo recorrera los renglones y los if checaran que estos no esten vacios
-//            while(rs.next()){
-//                if (rs.getString("claveLogin") != null) {
-//                    if (rs.getString("pass") != null) {
-//                        //ejecutamos la actualizacion para activar sesion
-//                        ps.executeUpdate();
-//                        //cerramos la ventana actual y abrimos la ventana prueba
-        Menu obj = new Menu();
-        obj.setVisible(true);
-        this.dispose();
-//                    }
-//                }
-//            }
-//        } catch (SQLException ex) {  
-//            JOptionPane.showMessageDialog(this, "El usuario o la contraseña son incorrectos",
-//                                            "Error",JOptionPane.ERROR_MESSAGE);
-//        } 
-//        //limpiamos las cajas de texto
-//        txtUsuario.setText(null);
-//        txtCampoContrasenia.setText("");
+        String usuario = txtUsuario.getText();
+        String contrasena = txtCampoContrasena.getText();
+
+        if (usuario.length() == 0) {
+            JOptionPane.showMessageDialog(this, "El campo Usuario no puede estar vacio", "Error", JOptionPane.ERROR_MESSAGE);
+            txtUsuario.requestFocus();
+        } else if (contrasena.length() == 0) {
+            JOptionPane.showMessageDialog(this, "El campo Contraseña no puede estar vacio", "Error", JOptionPane.ERROR_MESSAGE);
+            txtCampoContrasena.requestFocus();
+        } else {
+            try {
+                String consulta = "SELECT Usuario, Contrasena FROM Usuario WHERE Usuario ='" + usuario + "' AND Contrasena ='" + contrasena + "'";
+                String estado = "UPDATE Usuario SET estado = 1 WHERE Usuario ='" + usuario + "'";
+                ps = cin.prepareStatement(consulta);
+                rs = ps.executeQuery();
+                if (rs.next() == true) {
+                    ps = cin.prepareStatement(estado);
+                    if (ps.executeUpdate() > 0) {
+                        Menu menu = new Menu();
+                        menu.setVisible(true);
+                        this.dispose();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Usuario y/o Contraseña incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Usuario y/o Contraseña incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            txtUsuario.setText(null);
+            txtCampoContrasena.setText(null);
+        }
     }//GEN-LAST:event_btnEntrarActionPerformed
+
+    private void txtCampoContrasenaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCampoContrasenaKeyTyped
+        // TODO add your handling code here:
+        if (txtCampoContrasena.getText().length() == 8) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtCampoContrasenaKeyTyped
+
+    private void txtUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyTyped
+        // TODO add your handling code here:
+        if (txtUsuario.getText().length() == 8) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtUsuarioKeyTyped
 
     /**
      * @param args the command line arguments
@@ -255,20 +275,18 @@ public class Login extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
 
+        //</editor-fold>
+        //</editor-fold>
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Login().setVisible(true);
             }
@@ -287,7 +305,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPasswordField txtCampoContrasenia;
+    private javax.swing.JPasswordField txtCampoContrasena;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }
