@@ -27,7 +27,7 @@ public class Inventario extends javax.swing.JFrame {
     Connection cin = conexion.getConexion();
     PreparedStatement ps;
     ResultSet rs;
-    DefaultTableModel modelo = new DefaultTableModel();
+    String opcion;
 
     /**
      * Creates new form DatosUsuario
@@ -39,24 +39,34 @@ public class Inventario extends javax.swing.JFrame {
 //        getContentPane().setLayout(null);
         setLocationRelativeTo(null);
         setResizable(false);
+
+        claveabuscar.setEnabled(false);
         nombreabuscar.setEnabled(false);
         buscar.setEnabled(false);
 
         Opciones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String opcion = String.valueOf(Opciones.getSelectedItem());
+                opcion = String.valueOf(Opciones.getSelectedItem());
                 switch (opcion) {
                     case "Seleccione una opción":
+                        claveabuscar.setEnabled(false);
                         nombreabuscar.setEnabled(false);
                         buscar.setEnabled(false);
                         break;
-                    case "Mostrar todo":
+                    case "Buscar todo":
+                        claveabuscar.setEnabled(false);
                         nombreabuscar.setEnabled(false);
                         buscar.setEnabled(false);
                         InventarioCompleto();
                         break;
-                    case "Busqueda personalizada":
+                    case "Busqueda por clave":
+                        claveabuscar.setEnabled(true);
+                        nombreabuscar.setEnabled(false);
+                        buscar.setEnabled(true);
+                        break;
+                    case "Busqueda por nombre":
+                        claveabuscar.setEnabled(false);
                         nombreabuscar.setEnabled(true);
                         buscar.setEnabled(true);
                         break;
@@ -68,7 +78,8 @@ public class Inventario extends javax.swing.JFrame {
 
     public void InventarioCompleto() {
         try {
-            JTMateriales.setModel (modelo);
+            DefaultTableModel modelo = new DefaultTableModel();
+            JTMateriales.setModel(modelo);
             String consulta = "SELECT * FROM Materiales";
             ps = cin.prepareStatement(consulta);
             rs = ps.executeQuery();
@@ -124,6 +135,8 @@ public class Inventario extends javax.swing.JFrame {
         Opciones = new javax.swing.JComboBox<>();
         EliminarMaterial = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        claveabuscar = new javax.swing.JTextField();
 
         jTextField2.setText("jTextField2");
 
@@ -132,6 +145,11 @@ public class Inventario extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         buscar.setText("Buscar");
+        buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscarActionPerformed(evt);
+            }
+        });
 
         etqBuscar.setText("Buscar:");
 
@@ -206,7 +224,7 @@ public class Inventario extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(JTMateriales);
 
-        Opciones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {"Seleccione una opción", "Mostrar todo", "Busqueda personalizada"}));
+        Opciones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {"Seleccione una opción", "Busqueda por clave", "Busqueda por nombre", "Buscar todo"}));
 
         EliminarMaterial.setText("Eliminar");
         EliminarMaterial.addActionListener(new java.awt.event.ActionListener() {
@@ -216,6 +234,8 @@ public class Inventario extends javax.swing.JFrame {
         });
 
         jLabel1.setText("Nombre:");
+
+        jLabel3.setText("Clave:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -230,38 +250,41 @@ public class Inventario extends javax.swing.JFrame {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane2)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(40, 40, 40)
-                                        .addComponent(etqBuscar)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(Opciones, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel1)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(nombreabuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(buscar)
-                                        .addGap(48, 48, 48)))
-                                .addContainerGap())
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(122, 122, 122)
-                                .addComponent(etqAgregarProducto)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2)
-                                .addGap(224, 224, 224))))
+                        .addGap(140, 140, 140)
+                        .addComponent(etqAgregarProducto)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addGap(224, 224, 224))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(69, 69, 69)
                         .addComponent(AgregarMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(EliminarMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(78, 78, 78)
+                        .addGap(89, 89, 89)
                         .addComponent(Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(58, 58, 58))))
+                        .addGap(58, 58, 58))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGap(58, 58, 58)
+                                .addComponent(etqBuscar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(Opciones, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(claveabuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(nombreabuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34)
+                                .addComponent(buscar)
+                                .addGap(15, 15, 15))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(19, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,7 +302,9 @@ public class Inventario extends javax.swing.JFrame {
                     .addComponent(nombreabuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Opciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(buscar))
+                    .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(claveabuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -328,6 +353,124 @@ public class Inventario extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_CancelarActionPerformed
 
+    private void buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarActionPerformed
+        // TODO add your handling code here:
+        switch (opcion) {
+            case "Busqueda por clave":
+                PorClave();
+                break;
+            case "Busqueda por nombre":
+                PorNombre();
+                break;
+        }
+    }//GEN-LAST:event_buscarActionPerformed
+
+    public void PorClave() {
+        String clave = claveabuscar.getText();
+
+        if (isNumeric(clave)) {
+            try {
+                DefaultTableModel modelo = new DefaultTableModel();
+                JTMateriales.setModel(modelo);
+                Object filas[] = new Object[1];
+
+                String consulta = "SELECT * FROM Materiales WHERE Cod_Producto = " + clave;
+                ps = cin.prepareStatement(consulta);
+                rs = ps.executeQuery();
+
+                ResultSetMetaData rsMd = rs.getMetaData();
+                int cantidadColumnas = rsMd.getColumnCount();
+
+                modelo.addColumn("Clave Producto");
+                modelo.addColumn("Nombre");
+                modelo.addColumn("Existencias");
+                modelo.addColumn("Precio Compra");
+                modelo.addColumn("Precio Venta");
+                modelo.addColumn("Descripción");
+                modelo.addColumn("Fecha Ingreso");
+
+                while (rs.next()) {
+                    filas = new Object[cantidadColumnas];
+                    for (int i = 0; i < cantidadColumnas; i++) {
+                        filas[i] = rs.getObject(i + 1);
+                    }
+                    modelo.addRow(filas);
+                }
+
+                if (filas[0] == null) {
+                    JOptionPane.showMessageDialog(this, "El Codigo del producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    claveabuscar.requestFocus();
+                }
+                claveabuscar.setText(null);
+                claveabuscar.requestFocus();
+            } catch (HeadlessException | NumberFormatException | SQLException e) {
+                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "El Codigo producto es obligatorio (Solo Numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            claveabuscar.setText(null);
+            claveabuscar.requestFocus();
+        }
+    }
+
+    public void PorNombre() {
+        String nombre = nombreabuscar.getText();
+        nombre = nombre.trim();
+
+        if (nombre.length() > 51 || nombre.length() == 0) {
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            nombreabuscar.requestFocus();
+        } else {
+            try {
+                DefaultTableModel modelo = new DefaultTableModel();
+                JTMateriales.setModel(modelo);
+                Object filas[] = new Object[1];
+
+                String consulta = "SELECT * FROM Materiales WHERE Nombre_Producto = '" + nombre + "'";
+                ps = cin.prepareStatement(consulta);
+                rs = ps.executeQuery();
+
+                ResultSetMetaData rsMd = rs.getMetaData();
+                int cantidadColumnas = rsMd.getColumnCount();
+
+                modelo.addColumn("Clave Producto");
+                modelo.addColumn("Nombre");
+                modelo.addColumn("Existencias");
+                modelo.addColumn("Precio Compra");
+                modelo.addColumn("Precio Venta");
+                modelo.addColumn("Descripción");
+                modelo.addColumn("Fecha Ingreso");
+
+                while (rs.next()) {
+                    filas = new Object[cantidadColumnas];
+                    for (int i = 0; i < cantidadColumnas; i++) {
+                        filas[i] = rs.getObject(i + 1);
+                    }
+                    modelo.addRow(filas);
+                }
+
+                if (filas[0] == null) {
+                    JOptionPane.showMessageDialog(this, "El Nombre del producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    nombreabuscar.requestFocus();
+                }
+                nombreabuscar.setText(null);
+                nombreabuscar.requestFocus();
+            } catch (HeadlessException | NumberFormatException | SQLException e) {
+                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+    }
+    
+     private boolean isNumeric(String cad) {
+        try {
+            Integer.parseInt(cad);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -345,7 +488,12 @@ public class Inventario extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Inventario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Inventario
+
+.class  
+
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -354,7 +502,7 @@ public class Inventario extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
-            public void run() {
+        public void run() {
                 new Inventario().setVisible(true);
             }
         });
@@ -367,10 +515,12 @@ public class Inventario extends javax.swing.JFrame {
     private javax.swing.JTable JTMateriales;
     private javax.swing.JComboBox<String> Opciones;
     private javax.swing.JButton buscar;
+    private javax.swing.JTextField claveabuscar;
     private javax.swing.JLabel etqAgregarProducto;
     private javax.swing.JLabel etqBuscar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
