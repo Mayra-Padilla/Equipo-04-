@@ -3,15 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/Equipo-04-Papeleria/gestorDeVentas%20-%20papeleria/src/gestordeventas/Inventario.java</file>
-            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/Equipo-04-Papeleria/gestorDeVentas%20-%20papeleria/src/gestordeventas/InicioSesion.java</file>
-            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/Equipo-04-Papeleria/gestorDeVentas%20-%20papeleria/src/gestordeventas/Menu.java</file>
-            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/Equipo-04-Papeleria/gestorDeVentas%20-%20papeleria/src/gestordeventas/pantalla.java</file>
-            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/Equipo-04-Papeleria/gestorDeVentas%20-%20papeleria/src/gestordeventas/Reportes.java</file>
-            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/Equipo-04-Papeleria/gestorDeVentas%20-%20papeleria/src/gestordeventas/AgregarProducto.java</file>
-            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/Equipo-04-Papeleria/gestorDeVentas%20-%20papeleria/src/gestordeventas/AgregarUsuario.java</file>
-            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/Equipo-04-Papeleria/gestorDeVentas%20-%20papeleria/src/gestordeventas/Prueba.java</file>
-            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/Equipo-04-Papeleria/gestorDeVentas%20-%20papeleria/src/gestordeventas/Login.java</file>
+            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/EQUIPO%204/Equipo-04-/gestorDeVentas%20-%20papeleria/src/gestordeventas/AgregarProducto.java</file>
+            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/EQUIPO%204/Equipo-04-/gestorDeVentas%20-%20papeleria/src/gestordeventas/AgregarUsuario.java</file>
+            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/EQUIPO%204/Equipo-04-/gestorDeVentas%20-%20papeleria/src/gestordeventas/EliminarProducto.java</file>
+            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/EQUIPO%204/Equipo-04-/gestorDeVentas%20-%20papeleria/src/gestordeventas/Reportes.java</file>
+            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/EQUIPO%204/Equipo-04-/gestorDeVentas%20-%20papeleria/src/PDF/GenerarPDF.java</file>
+            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/EQUIPO%204/Equipo-04-/gestorDeVentas%20-%20papeleria/src/gestordeventas/Inventario.java</file>
+            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/EQUIPO%204/Equipo-04-/gestorDeVentas%20-%20papeleria/src/gestordeventas/Login.java</file>
+            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/EQUIPO%204/Equipo-04-/gestorDeVentas%20-%20papeleria/src/gestordeventas/ModificarProducto.java</file>
+            <file>file:/C:/Users/Mayra/Documents/NetBeansProjects/EQUIPO%204/Equipo-04-/gestorDeVentas%20-%20papeleria/src/gestordeventas/Menu.java</file>
         </group>
     </open-files>
 </project-private>
