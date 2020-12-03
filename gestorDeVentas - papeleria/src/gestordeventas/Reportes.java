@@ -5,11 +5,41 @@
  */
 package gestordeventas;
 
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import gestordeventas.Conexion.conexion;
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Mayra
  */
 public class Reportes extends javax.swing.JFrame {
+
+    conexion conecion = new conexion();
+    Connection cin = conexion.getConexion();
+    PreparedStatement ps;
+    ResultSet rs;
+    String opcion;
 
     /**
      * Creates new form Reportes
@@ -21,6 +51,423 @@ public class Reportes extends javax.swing.JFrame {
 //        getContentPane().setLayout(null);
         setLocationRelativeTo(null);
         setResizable(false);
+        LlenarTabla();
+
+        txtClaveProducto.setEnabled(false);
+        txtNombre.setEnabled(false);
+        txtExisRangoInicial.setEnabled(false);
+        txtExisRangoFinal.setEnabled(false);
+        txtPrecioInicial.setEnabled(false);
+        txtPrecioFinal.setEnabled(false);
+        cbxFechaInicio.setEnabled(false);
+        cbxFechaFinal.setEnabled(false);
+        txtDescripcion.setEnabled(false);
+
+        cbxSeleccione.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                opcion = String.valueOf(cbxSeleccione.getSelectedItem());
+                switch (opcion) {
+                    case " ":
+//                        txtClaveProducto.setEnabled(false);
+//                        txtNombre.setEnabled(false);
+//                        txtExisRangoInicial.setEnabled(false);
+//                        txtExisRangoFinal.setEnabled(false);
+//                        txtPrecioInicial.setEnabled(false);
+//                        txtPrecioFinal.setEnabled(false);
+//                        cbxFechaInicio.setEnabled(false);
+//                        cbxFechaFinal.setEnabled(false);
+//                        txtDescripcion.setEnabled(false);
+                        LlenarTabla();
+                        break;
+                    case "Clave producto":
+                        txtClaveProducto.setEnabled(true);
+                        txtNombre.setEnabled(false);
+                        txtExisRangoInicial.setEnabled(false);
+                        txtExisRangoFinal.setEnabled(false);
+                        txtPrecioInicial.setEnabled(false);
+                        txtPrecioFinal.setEnabled(false);
+                        cbxFechaInicio.setEnabled(false);
+                        cbxFechaFinal.setEnabled(false);
+                        txtDescripcion.setEnabled(false);
+                        break;
+                    case "Nombre":
+                        txtClaveProducto.setEnabled(false);
+                        txtNombre.setEnabled(true);
+                        txtExisRangoInicial.setEnabled(false);
+                        txtExisRangoFinal.setEnabled(false);
+                        txtPrecioInicial.setEnabled(false);
+                        txtPrecioFinal.setEnabled(false);
+                        cbxFechaInicio.setEnabled(false);
+                        cbxFechaFinal.setEnabled(false);
+                        txtDescripcion.setEnabled(false);
+                        break;
+                    case "Existencias":
+                        txtClaveProducto.setEnabled(false);
+                        txtNombre.setEnabled(false);
+                        txtExisRangoInicial.setEnabled(true);
+                        txtExisRangoFinal.setEnabled(true);
+                        txtPrecioInicial.setEnabled(false);
+                        txtPrecioFinal.setEnabled(false);
+                        cbxFechaInicio.setEnabled(false);
+                        cbxFechaFinal.setEnabled(false);
+                        txtDescripcion.setEnabled(false);
+                        break;
+                    case "Precio unitario":
+                        txtClaveProducto.setEnabled(false);
+                        txtNombre.setEnabled(false);
+                        txtExisRangoInicial.setEnabled(false);
+                        txtExisRangoFinal.setEnabled(false);
+                        txtPrecioInicial.setEnabled(true);
+                        txtPrecioFinal.setEnabled(true);
+                        cbxFechaInicio.setEnabled(false);
+                        cbxFechaFinal.setEnabled(false);
+                        txtDescripcion.setEnabled(false);
+                        break;
+                    case "Fecha":
+                        txtClaveProducto.setEnabled(false);
+                        txtNombre.setEnabled(false);
+                        txtExisRangoInicial.setEnabled(false);
+                        txtExisRangoFinal.setEnabled(false);
+                        txtPrecioInicial.setEnabled(false);
+                        txtPrecioFinal.setEnabled(false);
+                        cbxFechaInicio.setEnabled(true);
+                        cbxFechaFinal.setEnabled(true);
+                        txtDescripcion.setEnabled(false);
+                        break;
+                    case "Descripción":
+                        txtClaveProducto.setEnabled(false);
+                        txtNombre.setEnabled(false);
+                        txtExisRangoInicial.setEnabled(false);
+                        txtExisRangoFinal.setEnabled(false);
+                        txtPrecioInicial.setEnabled(false);
+                        txtPrecioFinal.setEnabled(false);
+                        cbxFechaInicio.setEnabled(false);
+                        cbxFechaFinal.setEnabled(false);
+                        txtDescripcion.setEnabled(true);
+                        break;
+                }
+            }
+        });
+
+    }
+
+    public void LlenarTabla() {
+        try {
+            DefaultTableModel modelo = new DefaultTableModel();
+            jTable1.setModel(modelo);
+            String consulta = "SELECT Cod_Producto, Nombre_Producto, Existencias, Precio_Venta, Descripcion, Fecha_ingreso FROM Materiales";
+            ps = cin.prepareStatement(consulta);
+            rs = ps.executeQuery();
+
+            ResultSetMetaData rsMd = rs.getMetaData();
+            int cantidadColumnas = rsMd.getColumnCount();
+
+            modelo.addColumn("Clave Producto");
+            modelo.addColumn("Nombre");
+            modelo.addColumn("Existencias");
+            modelo.addColumn("Precio Unitario");
+            modelo.addColumn("Descripción");
+            modelo.addColumn("Fecha");
+
+            while (rs.next()) {
+                Object[] filas = new Object[cantidadColumnas];
+
+                for (int i = 0; i < cantidadColumnas; i++) {
+                    filas[i] = rs.getObject(i + 1);
+                }
+
+                modelo.addRow(filas);
+            }
+        } catch (HeadlessException | NumberFormatException | SQLException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void ClaveProducto() {
+        String clave = txtClaveProducto.getText();
+
+        if (isNumeric(clave)) {
+            try {
+                DefaultTableModel modelo = new DefaultTableModel();
+                jTable1.setModel(modelo);
+                Object filas[] = new Object[1];
+
+                String consulta = "SELECT * FROM Materiales WHERE Cod_Producto = " + clave;
+                System.out.println(consulta);
+                ps = cin.prepareStatement(consulta);
+                rs = ps.executeQuery();
+
+                ResultSetMetaData rsMd = rs.getMetaData();
+                int cantidadColumnas = rsMd.getColumnCount();
+
+                modelo.addColumn("Clave Producto");
+                modelo.addColumn("Nombre");
+                modelo.addColumn("Existencias");
+                modelo.addColumn("Precio Unitario");
+                modelo.addColumn("Descripción");
+                modelo.addColumn("Fecha");
+
+                while (rs.next()) {
+                    filas = new Object[cantidadColumnas];
+                    for (int i = 0; i < cantidadColumnas; i++) {
+                        filas[i] = rs.getObject(i + 1);
+                    }
+                    modelo.addRow(filas);
+                }
+
+                if (filas[0] == null) {
+                    JOptionPane.showMessageDialog(this, "El código del producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    txtClaveProducto.requestFocus();
+                }
+                txtClaveProducto.setText(null);
+                txtClaveProducto.requestFocus();
+            } catch (HeadlessException | NumberFormatException | SQLException e) {
+                JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "El código producto es obligatorio (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtClaveProducto.setText(null);
+            txtClaveProducto.requestFocus();
+        }
+        txtClaveProducto.setText("");
+    }
+
+    public void NombreProducto() {
+        String nombre = txtNombre.getText();
+        nombre = nombre.trim();
+
+        if (nombre.length() > 51 || nombre.length() == 0) {
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtNombre.requestFocus();
+        } else {
+            try {
+                DefaultTableModel modelo = new DefaultTableModel();
+                jTable1.setModel(modelo);
+                Object filas[] = new Object[1];
+
+                String consulta = "SELECT * FROM Materiales WHERE Nombre_Producto LIKE '%" + nombre + "%'";
+                ps = cin.prepareStatement(consulta);
+                rs = ps.executeQuery();
+
+                ResultSetMetaData rsMd = rs.getMetaData();
+                int cantidadColumnas = rsMd.getColumnCount();
+
+                modelo.addColumn("Clave Producto");
+                modelo.addColumn("Nombre");
+                modelo.addColumn("Existencias");
+                modelo.addColumn("Precio Unitario");
+                modelo.addColumn("Descripción");
+                modelo.addColumn("Fecha");
+
+                while (rs.next()) {
+                    filas = new Object[cantidadColumnas];
+                    for (int i = 0; i < cantidadColumnas; i++) {
+                        filas[i] = rs.getObject(i + 1);
+                    }
+                    modelo.addRow(filas);
+                }
+
+                if (filas[0] == null) {
+                    JOptionPane.showMessageDialog(this, "El Nombre del producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    txtNombre.requestFocus();
+                }
+                txtNombre.setText(null);
+                txtNombre.requestFocus();
+            } catch (HeadlessException | NumberFormatException | SQLException e) {
+                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        txtNombre.setText("");
+    }
+
+    public void RangoExistencias() {
+        String inicial = txtExisRangoInicial.getText();
+        String finall = txtExisRangoFinal.getText();
+
+        if (isNumeric(inicial) && isNumeric(finall)) {
+            try {
+                DefaultTableModel modelo = new DefaultTableModel();
+                jTable1.setModel(modelo);
+                Object filas[] = new Object[1];
+
+                String consulta = "SELECT * FROM Materiales WHERE Existencias BETWEEN " + inicial + " AND " + finall;
+                System.out.println(consulta);
+                ps = cin.prepareStatement(consulta);
+                rs = ps.executeQuery();
+
+                ResultSetMetaData rsMd = rs.getMetaData();
+                int cantidadColumnas = rsMd.getColumnCount();
+
+                modelo.addColumn("Clave Producto");
+                modelo.addColumn("Nombre");
+                modelo.addColumn("Existencias");
+                modelo.addColumn("Precio Unitario");
+                modelo.addColumn("Descripción");
+                modelo.addColumn("Fecha");
+
+                while (rs.next()) {
+                    filas = new Object[cantidadColumnas];
+                    for (int i = 0; i < cantidadColumnas; i++) {
+                        filas[i] = rs.getObject(i + 1);
+                    }
+                    modelo.addRow(filas);
+                }
+
+                if (filas[0] == null) {
+                    JOptionPane.showMessageDialog(this, "El código del producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    txtClaveProducto.requestFocus();
+                }
+                txtClaveProducto.setText(null);
+                txtClaveProducto.requestFocus();
+            } catch (HeadlessException | NumberFormatException | SQLException e) {
+                JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "El código producto es obligatorio (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtClaveProducto.setText(null);
+            txtClaveProducto.requestFocus();
+        }
+        txtExisRangoInicial.setText("");
+        txtExisRangoFinal.setText("");
+    }
+
+    public void RangoPrecio() {
+        String inicial = txtPrecioInicial.getText();
+        String finall = txtPrecioFinal.getText();
+
+        if (isNumeric(inicial) && isNumeric(finall)) {
+            try {
+                DefaultTableModel modelo = new DefaultTableModel();
+                jTable1.setModel(modelo);
+                Object filas[] = new Object[1];
+
+                String consulta = "SELECT * FROM Materiales WHERE Precio_Venta BETWEEN " + inicial + " AND " + finall;
+                System.out.println(consulta);
+                ps = cin.prepareStatement(consulta);
+                rs = ps.executeQuery();
+
+                ResultSetMetaData rsMd = rs.getMetaData();
+                int cantidadColumnas = rsMd.getColumnCount();
+
+                modelo.addColumn("Clave Producto");
+                modelo.addColumn("Nombre");
+                modelo.addColumn("Existencias");
+                modelo.addColumn("Precio Unitario");
+                modelo.addColumn("Descripción");
+                modelo.addColumn("Fecha");
+
+                while (rs.next()) {
+                    filas = new Object[cantidadColumnas];
+                    for (int i = 0; i < cantidadColumnas; i++) {
+                        filas[i] = rs.getObject(i + 1);
+                    }
+                    modelo.addRow(filas);
+                }
+
+                if (filas[0] == null) {
+                    JOptionPane.showMessageDialog(this, "El código del producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    txtClaveProducto.requestFocus();
+                }
+                txtClaveProducto.setText(null);
+                txtClaveProducto.requestFocus();
+            } catch (HeadlessException | NumberFormatException | SQLException e) {
+                JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "El código producto es obligatorio (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtClaveProducto.setText(null);
+            txtClaveProducto.requestFocus();
+        }
+        txtPrecioInicial.setText("");
+        txtPrecioFinal.setText("");
+    }
+
+    public void Descripcion() {
+        String descripcion = txtDescripcion.getText();
+        descripcion = descripcion.trim();
+
+        if (descripcion.length() > 51 || descripcion.length() == 0) {
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            txtDescripcion.requestFocus();
+        } else {
+            try {
+                DefaultTableModel modelo = new DefaultTableModel();
+                jTable1.setModel(modelo);
+                Object filas[] = new Object[1];
+
+                String consulta = "SELECT * FROM Materiales WHERE Descripcion LIKE '%" + descripcion + "%'";
+                ps = cin.prepareStatement(consulta);
+                rs = ps.executeQuery();
+
+                ResultSetMetaData rsMd = rs.getMetaData();
+                int cantidadColumnas = rsMd.getColumnCount();
+
+                modelo.addColumn("Clave Producto");
+                modelo.addColumn("Nombre");
+                modelo.addColumn("Existencias");
+                modelo.addColumn("Precio Unitario");
+                modelo.addColumn("Descripción");
+                modelo.addColumn("Fecha");
+
+                while (rs.next()) {
+                    filas = new Object[cantidadColumnas];
+                    for (int i = 0; i < cantidadColumnas; i++) {
+                        filas[i] = rs.getObject(i + 1);
+                    }
+                    modelo.addRow(filas);
+                }
+
+                if (filas[0] == null) {
+                    JOptionPane.showMessageDialog(this, "No se encontraron resultados", "Error", JOptionPane.ERROR_MESSAGE);
+                    txtDescripcion.requestFocus();
+                }
+                txtDescripcion.setText(null);
+                txtDescripcion.requestFocus();
+            } catch (HeadlessException | NumberFormatException | SQLException e) {
+                JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        txtDescripcion.setText("");
+    }
+
+    public void Fecha() {
+        Date fechaInicial = cbxFechaInicio.getDate();
+        Date fechaFianel = cbxFechaFinal.getDate();
+
+    }
+
+    private boolean isNumeric(String cad) {
+        try {
+            Integer.parseInt(cad);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
+    public static final String DEST = "C:\\Users\\Mayra\\Documents\\NetBeansProjects\\EQUIPO 4\\Equipo-04-\\gestorDeVentas - papeleria\\PFD GENERADOS\\Reporte.pdf";
+    public static final String LOGO = "C:\\Users\\Mayra\\Documents\\NetBeansProjects\\EQUIPO 4\\Equipo-04-\\gestorDeVentas - papeleria\\gestorDeVentasImagenes\\papeleria2.jpg";
+
+    //destino es la ruta de arriba DEST
+    public void crearPDF(String destino) throws IOException {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        PdfWriter escribir = new PdfWriter(destino);
+        PdfDocument pdf = new PdfDocument(escribir);
+        Document documento = new Document(pdf, PageSize.A4.rotate());
+        documento.setMargins(20, 20, 20, 20);
+        Image logo = new Image(ImageDataFactory.create(LOGO));
+
+//        documento.add(new Paragraph("Reporte        " + dateFormat.format(date)));
+        Paragraph parrafo = new Paragraph("Reporte de la fecha:    " + dateFormat.format(date) + "")
+                //                .add("\n")
+                .add(logo);
+        documento.add(parrafo);
+        Table tabla = new Table(new float[]{2, 4, 4});
+        tabla.setWidth(100);
+
+        documento.close();
     }
 
     /**
@@ -41,27 +488,29 @@ public class Reportes extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cbxSeleccione = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtClaveProducto = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtExisRangoInicial = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txtExisRangoFinal = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txtPrecioInicial = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        txtPrecioFinal = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
+        txtDescripcion = new javax.swing.JTextArea();
+        btnFiltrar = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
-        jCalendarCombo1 = new org.freixas.jcalendar.JCalendarCombo();
+        cbxFechaInicio = new org.freixas.jcalendar.JCalendarCombo();
         jLabel11 = new javax.swing.JLabel();
-        jCalendarCombo2 = new org.freixas.jcalendar.JCalendarCombo();
+        cbxFechaFinal = new org.freixas.jcalendar.JCalendarCombo();
+        jLabel4 = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        btnGenerarReporte = new javax.swing.JButton();
+        btnRestablecer = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -113,24 +562,22 @@ public class Reportes extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Calve producto", "Nombre", "Marca", "Existencias", "Precio unitario", "Descripción"
+
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
         jLabel1.setText("Seleccione:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Clave producto", "Nombre", "Marca", "Existencias", "Precio unitario", "Descripción", "Fecha" }));
+        cbxSeleccione.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Clave producto", "Nombre", "Existencias", "Precio unitario", "Fecha", "Descripción" }));
 
         jLabel3.setText("Clave producto:");
-
-        jLabel4.setText("Marca:");
 
         jLabel5.setText("Existencias:");
 
@@ -142,15 +589,31 @@ public class Reportes extends javax.swing.JFrame {
 
         jLabel9.setText("Descripción:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        txtDescripcion.setColumns(20);
+        txtDescripcion.setRows(5);
+        jScrollPane2.setViewportView(txtDescripcion);
 
-        jButton1.setText("Generar reporte");
+        btnFiltrar.setText("Filtrar");
+        btnFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltrarActionPerformed(evt);
+            }
+        });
 
         jLabel10.setText("Fecha:");
 
         jLabel11.setText("a");
+
+        jLabel4.setText("Nombre:");
+
+        btnGenerarReporte.setText("Generar reporte");
+
+        btnRestablecer.setText("Restablecer");
+        btnRestablecer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestablecerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -165,78 +628,78 @@ public class Reportes extends javax.swing.JFrame {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(etqAgregarProducto)
-                        .addGap(120, 120, 120)
-                        .addComponent(jLabel2)
-                        .addGap(87, 87, 87))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane1)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(322, 322, 322)
-                                        .addComponent(jLabel11)
-                                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(91, 91, 91)
+                                .addComponent(cbxSeleccione, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtClaveProducto))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel10))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel9)
                                 .addGap(31, 31, 31)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(272, 272, 272)
-                                        .addComponent(jCalendarCombo2, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
-                                    .addComponent(jScrollPane2))))
-                        .addContainerGap())
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(235, 235, 235)
-                        .addComponent(jButton1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(33, 33, 33))
+                                .addComponent(jScrollPane2))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel5))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel5)
+                                .addGap(30, 30, 30)
+                                .addComponent(txtExisRangoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtExisRangoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(33, 33, 33)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPrecioInicial)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel8)
+                                .addGap(12, 12, 12)
+                                .addComponent(txtPrecioFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jCalendarCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, 201, Short.MAX_VALUE)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)))
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel4))
                                 .addGap(33, 33, 33)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField5)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel8)
-                                        .addGap(12, 12, 12)
-                                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField2)))))
-                        .addContainerGap())))
+                                    .addComponent(cbxFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNombre))))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnGenerarReporte)
+                        .addGap(221, 221, 221))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(324, 324, 324)
+                                .addComponent(jLabel11)
+                                .addContainerGap())
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(328, 328, 328)
+                                .addComponent(cbxFechaFinal, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(etqAgregarProducto)
+                                        .addGap(120, 120, 120)
+                                        .addComponent(jLabel2)
+                                        .addGap(87, 87, 87))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(btnRestablecer)
+                                        .addGap(112, 112, 112)
+                                        .addComponent(btnFiltrar)
+                                        .addGap(186, 186, 186))))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -254,44 +717,49 @@ public class Reportes extends javax.swing.JFrame {
                 .addGap(2, 2, 2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxSeleccione, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addGap(6, 6, 6))
+                        .addComponent(txtClaveProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(8, 8, 8)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtPrecioFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8)
+                            .addComponent(txtPrecioInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7)
+                            .addComponent(txtExisRangoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)
+                            .addComponent(txtExisRangoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(cbxFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel10)
+                        .addComponent(cbxFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel11)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(jCalendarCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11)
-                    .addComponent(jCalendarCombo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRestablecer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addComponent(btnGenerarReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -302,11 +770,43 @@ public class Reportes extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
+        // TODO add your handling code here:
+        switch (opcion) {
+            case " ":
+
+                break;
+            case "Clave producto":
+                ClaveProducto();
+                break;
+            case "Nombre":
+                NombreProducto();
+                break;
+            case "Existencias":
+                RangoExistencias();
+                break;
+            case "Precio unitario":
+                RangoPrecio();
+                break;
+            case "Fecha":
+                Fecha();
+                break;
+            case "Descripción":
+                Descripcion();
+                break;
+        }
+    }//GEN-LAST:event_btnFiltrarActionPerformed
+
+    private void btnRestablecerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestablecerActionPerformed
+        // TODO add your handling code here:
+        LlenarTabla();
+    }//GEN-LAST:event_btnRestablecerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -344,11 +844,13 @@ public class Reportes extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFiltrar;
+    private javax.swing.JButton btnGenerarReporte;
+    private javax.swing.JButton btnRestablecer;
+    private org.freixas.jcalendar.JCalendarCombo cbxFechaFinal;
+    private org.freixas.jcalendar.JCalendarCombo cbxFechaInicio;
+    private javax.swing.JComboBox<String> cbxSeleccione;
     private javax.swing.JLabel etqAgregarProducto;
-    private javax.swing.JButton jButton1;
-    private org.freixas.jcalendar.JCalendarCombo jCalendarCombo1;
-    private org.freixas.jcalendar.JCalendarCombo jCalendarCombo2;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -367,12 +869,12 @@ public class Reportes extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField txtClaveProducto;
+    private javax.swing.JTextArea txtDescripcion;
+    private javax.swing.JTextField txtExisRangoFinal;
+    private javax.swing.JTextField txtExisRangoInicial;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPrecioFinal;
+    private javax.swing.JTextField txtPrecioInicial;
     // End of variables declaration//GEN-END:variables
 }
