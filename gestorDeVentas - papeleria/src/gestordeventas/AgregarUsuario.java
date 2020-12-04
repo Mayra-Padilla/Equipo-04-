@@ -241,19 +241,19 @@ public class AgregarUsuario extends javax.swing.JFrame {
         contrasena = contrasena.trim();
 
         if (nombre.length() > 31 || nombre.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Máximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtNombreUsuario.requestFocus();
         } else if (apellido_paterno.length() > 31 || apellido_paterno.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El Apellido Paterno es obligatorio (Maximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Apellido Paterno es obligatorio (Máximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtApellidoPaterno.requestFocus();
         } else if (apellido_materno.length() > 31 || apellido_materno.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El Apeliido Materno es obligatorio (Maximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Apeliido Materno es obligatorio (Máximo 30 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtApellidoMaterno.requestFocus();
         } else if (usuario.length() > 9 || usuario.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El Usuario es obligatorio (Maximo 8 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Usuario es obligatorio (Máximo 8 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtUsuario.requestFocus();
         } else if (contrasena.length() > 8 || contrasena.length() == 0) {
-            JOptionPane.showMessageDialog(this, "La Contraseña es obligatoria (Maximo 8 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "La Contraseña es obligatoria (Máximo 8 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtContrasena.requestFocus();
         } else {
             try {
@@ -261,17 +261,17 @@ public class AgregarUsuario extends javax.swing.JFrame {
                         + "VALUES ('" + nombre + "', '" + apellido_paterno + "', '" + apellido_materno + "', '" + usuario + "', '" + contrasena + "')";
                 ps = cin.prepareStatement(consulta);
                 if (ps.executeUpdate() > 0) {
-                    JOptionPane.showMessageDialog(this, "Usuario agregado con exito");
+                    JOptionPane.showMessageDialog(this, "Usuario agregado con éxito");
                     txtNombreUsuario.setText(null);
                     txtApellidoPaterno.setText(null);
                     txtApellidoMaterno.setText(null);
                     txtUsuario.setText(null);
                     txtContrasena.setText(null);
                 } else {
-                    JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (HeadlessException | SQLException e) {
-                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnAgregarUsuarioActionPerformed
