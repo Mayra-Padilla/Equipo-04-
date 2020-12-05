@@ -60,12 +60,12 @@ public class Inventario extends javax.swing.JFrame {
                         buscar.setEnabled(false);
                         InventarioCompleto();
                         break;
-                    case "Búsqueda por clave":
+                    case "Busqueda por clave":
                         claveabuscar.setEnabled(true);
                         nombreabuscar.setEnabled(false);
                         buscar.setEnabled(true);
                         break;
-                    case "Búsqueda por nombre":
+                    case "Busqueda por nombre":
                         claveabuscar.setEnabled(false);
                         nombreabuscar.setEnabled(true);
                         buscar.setEnabled(true);
@@ -356,10 +356,10 @@ public class Inventario extends javax.swing.JFrame {
     private void buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarActionPerformed
         // TODO add your handling code here:
         switch (opcion) {
-            case "Búsqueda por clave":
+            case "Busqueda por clave":
                 PorClave();
                 break;
-            case "Búsqueda por nombre":
+            case "Busqueda por nombre":
                 PorNombre();
                 break;
         }
