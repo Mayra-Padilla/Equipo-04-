@@ -279,7 +279,7 @@ public class Menu extends javax.swing.JFrame {
 
     private void btnIngresarMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarMaterialActionPerformed
         // TODO add your handling code here:
-        AgregarProducto producto = new AgregarProducto();
+        AgregarProducto producto = new AgregarProducto(0);
         producto.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnIngresarMaterialActionPerformed
@@ -307,7 +307,7 @@ public class Menu extends javax.swing.JFrame {
 
     private void btnEliminarMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarMaterialActionPerformed
         // TODO add your handling code here:
-        EliminarProducto eliminar = new EliminarProducto();
+        EliminarProducto eliminar = new EliminarProducto(0);
         eliminar.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnEliminarMaterialActionPerformed
