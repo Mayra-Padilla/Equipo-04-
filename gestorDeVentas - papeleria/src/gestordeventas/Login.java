@@ -26,6 +26,11 @@ public class Login extends javax.swing.JFrame {
 
     public Login() {
         initComponents();
+        setTitle(".:: Inicio de sesión ::.");
+        setDefaultCloseOperation(Inventario.DISPOSE_ON_CLOSE);
+//        getContentPane().setLayout(null);
+        setLocationRelativeTo(null);
+        setResizable(false);
     }
 
     @SuppressWarnings("unchecked")
