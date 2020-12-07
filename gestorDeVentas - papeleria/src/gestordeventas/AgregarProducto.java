@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
  */
 public class AgregarProducto extends javax.swing.JFrame {
 
+    int acc;
     conexion conexion = new conexion();
     Connection cin = conexion.getConexion();
     Statement ps;
@@ -29,13 +30,14 @@ public class AgregarProducto extends javax.swing.JFrame {
     /**
      * Creates new form Producto
      */
-    public AgregarProducto() {
+    public AgregarProducto(int accion) {
         initComponents();
         setTitle(".:: Agregar producto ::.");
         setDefaultCloseOperation(Inventario.DISPOSE_ON_CLOSE);
 //        getContentPane().setLayout(null);
         setLocationRelativeTo(null);
         setResizable(false);
+        acc = accion;
     }
 
     /**
@@ -402,9 +404,15 @@ public class AgregarProducto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
-        Menu menu = new Menu();
-        menu.setVisible(true);
-        this.dispose();
+        if (acc == 0) {
+            Menu menu = new Menu();
+            menu.setVisible(true);
+            this.dispose();
+        }else{
+            Inventario i = new Inventario();
+            i.setVisible(true);
+            this.dispose();
+        }
 
     }//GEN-LAST:event_botonCancelarActionPerformed
 
@@ -428,25 +436,25 @@ public class AgregarProducto extends javax.swing.JFrame {
         venta = venta.trim();
         existencias = existencias.trim();
         if (!isNumeric(codigoProducto)) {
-            JOptionPane.showMessageDialog(this, "El Codigo producto es obligatorio (Solo Numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El código producto es obligatorio (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
             txtCodigoProducto.requestFocus();
         } else if (nombreproducto.length() > 51 || nombreproducto.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El nombre es obligatorio (Máximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtNombreProducto.requestFocus();
         } else if (isNumeric(codigoProducto) == false || codigoProducto.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El código del producto es obligatorio (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El código del producto es obligatorio (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
             txtExistencias.requestFocus();
         } else if (isNumeric(existencias) == false || existencias.length() == 0) {
-            JOptionPane.showMessageDialog(this, "Las Existencias son obligatorias (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Las existencias son obligatorias (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
             txtExistencias.requestFocus();
         } else if (isDouble(compra) == false || compra.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El Precio de compra es obligatorio (Solo numeros) ", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El precio de compra es obligatorio (Solo números) ", "Error", JOptionPane.ERROR_MESSAGE);
             txtPrecioCompra.requestFocus();
         } else if (isDouble(venta) == false || venta.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El Precio de venta es obligatorio (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El precio de venta es obligatorio (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
             txtPrecioVenta.requestFocus();
         } else if (descripcion.length() > 36) {
-            JOptionPane.showMessageDialog(this, "La descripción tiene un maximo de 35 caracteres", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "La descripción tiene un máximo de 35 caracteres", "Error", JOptionPane.ERROR_MESSAGE);
             txtDescripcion.requestFocus();
         } else {
             try {
@@ -469,7 +477,7 @@ public class AgregarProducto extends javax.swing.JFrame {
 
                 }
             } catch (HeadlessException | NumberFormatException | SQLException e) {
-                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)" + e, "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         }
@@ -524,7 +532,7 @@ public class AgregarProducto extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AgregarProducto().setVisible(true);
+                new AgregarProducto(0).setVisible(true);
             }
         });
     }
