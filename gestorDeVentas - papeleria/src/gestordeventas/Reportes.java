@@ -5,39 +5,21 @@
  */
 package gestordeventas;
 
-import com.itextpdf.io.font.FontConstants;
-import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Image;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
 import gestordeventas.Conexion.conexion;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import PDF.GenerarPDF;
+import java.awt.event.ActionListener;
 /**
  *
  * @author Mayra
@@ -352,7 +334,6 @@ public class Reportes extends javax.swing.JFrame {
                 Object filas[] = new Object[1];
 
                 String consulta = "SELECT Cod_Producto, Nombre_Producto, Existencias, Precio_Venta, Descripcion, Fecha_ingreso FROM Materiales WHERE Precio_Venta BETWEEN " + inicial + " AND " + finall;
-                System.out.println(consulta);
                 ps = cin.prepareStatement(consulta);
                 rs = ps.executeQuery();
 
@@ -860,11 +841,11 @@ public class Reportes extends javax.swing.JFrame {
             String fInicial = f.format(cbxFechaInicio.getDate());
             String fFinal = f.format(cbxFechaFinal.getDate());
 
-            String ruta = "C:\\Users\\Mayra\\Documents\\NetBeansProjects\\EQUIPO 4\\Equipo-04-\\gestorDeVentas - papeleria\\PFD GENERADOS\\Reporte.pdf";;
+            String ruta = "PDF GENERADOS/Reporte.pdf";
             GenerarPDF g = new GenerarPDF();
             g.createPDF(ruta, jTable1, fInicial, fFinal);
             
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }//GEN-LAST:event_btnGenerarReporteActionPerformed
@@ -892,19 +873,16 @@ public class Reportes extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Reportes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Reportes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Reportes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Reportes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Reportes().setVisible(true);
             }
