@@ -18,25 +18,28 @@ import javax.swing.JOptionPane;
  * @author Mayra
  */
 public class EliminarProducto extends javax.swing.JFrame {
-    
+
     conexion conecion = new conexion();
     Connection cin = conexion.getConexion();
     Statement ps;
     ResultSet rs;
+    int acc;
+
     /**
      * Creates new form EliminarProducto
      */
-    public EliminarProducto() {
+    public EliminarProducto(int accion) {
         initComponents();
         setTitle(".:: Eliminar producto ::.");
         setDefaultCloseOperation(EliminarProducto.DISPOSE_ON_CLOSE);
 //        getContentPane().setLayout(null);
         setLocationRelativeTo(null);
         setResizable(false);
-        
+
         etqCantidad.setVisible(false);
         fieldCantidad.setVisible(false);
         btnEliminar.setVisible(false);
+        acc = accion;
     }
 
     /**
@@ -253,18 +256,18 @@ public class EliminarProducto extends javax.swing.JFrame {
         if (isNumeric(codigoproducto) == true) {
             try {
                 String consulta = "DELETE FROM Materiales WHERE Cod_Producto = "
-                         + codigoproducto;
+                        + codigoproducto;
                 ps = cin.createStatement();
-                
+
                 if (!ps.execute(consulta)) {
-                     JOptionPane.showMessageDialog(this, "Producto eliminado correctamente.", "Exitoso", JOptionPane.OK_OPTION);
+                    JOptionPane.showMessageDialog(this, "Producto eliminado correctamente.", "Exitoso", JOptionPane.OK_OPTION);
                 } else {
                     JOptionPane.showMessageDialog(this, "El Codigo de producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (HeadlessException | SQLException e) {
                 JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            
+
             fieldClave.setText(null);
             fieldClave.requestFocus();
 
@@ -284,42 +287,48 @@ public class EliminarProducto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        Menu menu = new Menu();
-        menu.setVisible(true);
-        this.dispose();
+        if (acc == 0) {
+            Menu menu = new Menu();
+            menu.setVisible(true);
+            this.dispose();
+        } else {
+            Inventario i = new Inventario();
+            i.setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
         String cantidad = fieldCantidad.getText();
         String codigo = fieldClave.getText();
-        
-        if(isNumeric(codigo) == false){
+
+        if (isNumeric(codigo) == false) {
             JOptionPane.showMessageDialog(this, "El Codigo producto es obligatorio (Solo Numeros)", "Error", JOptionPane.ERROR_MESSAGE);
             fieldClave.setText(null);
             fieldClave.requestFocus();
-        }else if (isNumeric(cantidad) == false || cantidad.length() == 0) {
+        } else if (isNumeric(cantidad) == false || cantidad.length() == 0) {
             JOptionPane.showMessageDialog(this, "Las Existencias son obligatorias (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
             fieldCantidad.setText(null);
             fieldCantidad.requestFocus();
-        }else{
-            
+        } else {
+
             try {
-                String consulta = "UPDATE Materiales SET Existencias = " + 
-                        "Existencias - " + cantidad + "WHERE Cod_Producto ="
+                String consulta = "UPDATE Materiales SET Existencias = "
+                        + "Existencias - " + cantidad + "WHERE Cod_Producto ="
                         + codigo;
                 ps = cin.createStatement();
-                
+
                 if (!ps.execute(consulta)) {
-                     JOptionPane.showMessageDialog(this, "Material eliminado correctamente.", "Exitoso", JOptionPane.OK_OPTION);
+                    JOptionPane.showMessageDialog(this, "Material eliminado correctamente.", "Exitoso", JOptionPane.OK_OPTION);
                 } else {
                     JOptionPane.showMessageDialog(this, "El Codigo de producto no existe.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                
+
             } catch (HeadlessException | SQLException e) {
                 JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            
+
             btnSi.setEnabled(true);
             etqCantidad.setVisible(false);
             fieldCantidad.setVisible(false);
@@ -328,7 +337,7 @@ public class EliminarProducto extends javax.swing.JFrame {
             fieldClave.setText(null);
             fieldClave.requestFocus();
         }
-        
+
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
@@ -361,11 +370,11 @@ public class EliminarProducto extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EliminarProducto().setVisible(true);
+                new EliminarProducto(0).setVisible(true);
             }
         });
     }
-    
+
     private boolean isNumeric(String cad) {
         try {
             Integer.parseInt(cad);
