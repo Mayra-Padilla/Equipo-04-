@@ -230,7 +230,7 @@ public class Inventario extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(JTMateriales);
 
-        Opciones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {"Seleccione una opción", "Busqueda por clave", "Busqueda por nombre", "Buscar todo"}));
+        Opciones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {"Seleccione una opción", "Busqueda por clave", "Busqueda por nombre"}));
 
         EliminarMaterial.setText("Eliminar");
         EliminarMaterial.addActionListener(new java.awt.event.ActionListener() {
