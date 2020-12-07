@@ -222,10 +222,10 @@ public class Login extends javax.swing.JFrame {
         String contrasena = txtCampoContrasena.getText();
 
         if (usuario.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El campo Usuario no puede estar vacio", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El campo Usuario no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
             txtUsuario.requestFocus();
         } else if (contrasena.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El campo Contraseña no puede estar vacio", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El campo Contraseña no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
             txtCampoContrasena.requestFocus();
         } else {
             try {
