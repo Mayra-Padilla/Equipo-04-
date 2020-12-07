@@ -5,11 +5,15 @@
  */
 package gestordeventas;
 
+import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
@@ -17,7 +21,9 @@ import gestordeventas.Conexion.conexion;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,9 +32,12 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
+import PDF.GenerarPDF;
 /**
  *
  * @author Mayra
@@ -193,7 +202,7 @@ public class Reportes extends javax.swing.JFrame {
                 jTable1.setModel(modelo);
                 Object filas[] = new Object[1];
 
-                String consulta = "SELECT * FROM Materiales WHERE Cod_Producto = " + clave;
+                String consulta = "SELECT Cod_Producto, Nombre_Producto, Existencias, Precio_Venta, Descripcion, Fecha_ingreso FROM Materiales WHERE Cod_Producto = " + clave;
                 System.out.println(consulta);
                 ps = cin.prepareStatement(consulta);
                 rs = ps.executeQuery();
@@ -246,7 +255,7 @@ public class Reportes extends javax.swing.JFrame {
                 jTable1.setModel(modelo);
                 Object filas[] = new Object[1];
 
-                String consulta = "SELECT * FROM Materiales WHERE Nombre_Producto LIKE '%" + nombre + "%'";
+                String consulta = "SELECT Cod_Producto, Nombre_Producto, Existencias, Precio_Venta, Descripcion, Fecha_ingreso FROM Materiales WHERE Nombre_Producto LIKE '%" + nombre + "%'";
                 ps = cin.prepareStatement(consulta);
                 rs = ps.executeQuery();
 
@@ -291,7 +300,7 @@ public class Reportes extends javax.swing.JFrame {
                 jTable1.setModel(modelo);
                 Object filas[] = new Object[1];
 
-                String consulta = "SELECT * FROM Materiales WHERE Existencias BETWEEN " + inicial + " AND " + finall;
+                String consulta = "SELECT Cod_Producto, Nombre_Producto, Existencias, Precio_Venta, Descripcion, Fecha_ingreso FROM Materiales WHERE Existencias BETWEEN " + inicial + " AND " + finall;
                 System.out.println(consulta);
                 ps = cin.prepareStatement(consulta);
                 rs = ps.executeQuery();
@@ -342,7 +351,7 @@ public class Reportes extends javax.swing.JFrame {
                 jTable1.setModel(modelo);
                 Object filas[] = new Object[1];
 
-                String consulta = "SELECT * FROM Materiales WHERE Precio_Venta BETWEEN " + inicial + " AND " + finall;
+                String consulta = "SELECT Cod_Producto, Nombre_Producto, Existencias, Precio_Venta, Descripcion, Fecha_ingreso FROM Materiales WHERE Precio_Venta BETWEEN " + inicial + " AND " + finall;
                 System.out.println(consulta);
                 ps = cin.prepareStatement(consulta);
                 rs = ps.executeQuery();
@@ -396,7 +405,7 @@ public class Reportes extends javax.swing.JFrame {
                 jTable1.setModel(modelo);
                 Object filas[] = new Object[1];
 
-                String consulta = "SELECT * FROM Materiales WHERE Descripcion LIKE '%" + descripcion + "%'";
+                String consulta = "SELECT Cod_Producto, Nombre_Producto, Existencias, Precio_Venta, Descripcion, Fecha_ingreso FROM Materiales WHERE Descripcion LIKE '%" + descripcion + "%'";
                 ps = cin.prepareStatement(consulta);
                 rs = ps.executeQuery();
 
@@ -432,9 +441,48 @@ public class Reportes extends javax.swing.JFrame {
     }
 
     public void Fecha() {
+        String formato = "dd/MM/yyyy";
         Date fechaInicial = cbxFechaInicio.getDate();
-        Date fechaFianel = cbxFechaFinal.getDate();
+        Date fechaFinal = cbxFechaFinal.getDate();
+        SimpleDateFormat sdf = new SimpleDateFormat(formato);
 
+        try {
+            DefaultTableModel modelo = new DefaultTableModel();
+            jTable1.setModel(modelo);
+            Object filas[] = new Object[1];
+
+            String consulta = "SELECT Cod_Producto, Nombre_Producto, Existencias, Precio_Venta, Descripcion, Fecha_ingreso FROM Materiales WHERE Fecha_ingreso BETWEEN '" + sdf.format(fechaInicial) + "' AND '" + sdf.format(fechaFinal) + "'";
+            System.out.println(consulta);
+            ps = cin.prepareStatement(consulta);
+            rs = ps.executeQuery();
+
+            ResultSetMetaData rsMd = rs.getMetaData();
+            int cantidadColumnas = rsMd.getColumnCount();
+
+            modelo.addColumn("Clave Producto");
+            modelo.addColumn("Nombre");
+            modelo.addColumn("Existencias");
+            modelo.addColumn("Precio Unitario");
+            modelo.addColumn("Descripción");
+            modelo.addColumn("Fecha");
+
+            while (rs.next()) {
+                filas = new Object[cantidadColumnas];
+                for (int i = 0; i < cantidadColumnas; i++) {
+                    filas[i] = rs.getObject(i + 1);
+                }
+                modelo.addRow(filas);
+            }
+
+            if (filas[0] == null) {
+                JOptionPane.showMessageDialog(this, "El código del producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                txtClaveProducto.requestFocus();
+            }
+            txtClaveProducto.setText(null);
+            txtClaveProducto.requestFocus();
+        } catch (HeadlessException | NumberFormatException | SQLException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private boolean isNumeric(String cad) {
@@ -444,30 +492,6 @@ public class Reportes extends javax.swing.JFrame {
         } catch (NumberFormatException nfe) {
             return false;
         }
-    }
-
-    public static final String DEST = "C:\\Users\\Mayra\\Documents\\NetBeansProjects\\EQUIPO 4\\Equipo-04-\\gestorDeVentas - papeleria\\PFD GENERADOS\\Reporte.pdf";
-    public static final String LOGO = "C:\\Users\\Mayra\\Documents\\NetBeansProjects\\EQUIPO 4\\Equipo-04-\\gestorDeVentas - papeleria\\gestorDeVentasImagenes\\papeleria2.jpg";
-
-    //destino es la ruta de arriba DEST
-    public void crearPDF(String destino) throws IOException {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date = new Date();
-        PdfWriter escribir = new PdfWriter(destino);
-        PdfDocument pdf = new PdfDocument(escribir);
-        Document documento = new Document(pdf, PageSize.A4.rotate());
-        documento.setMargins(20, 20, 20, 20);
-        Image logo = new Image(ImageDataFactory.create(LOGO));
-
-//        documento.add(new Paragraph("Reporte        " + dateFormat.format(date)));
-        Paragraph parrafo = new Paragraph("Reporte de la fecha:    " + dateFormat.format(date) + "")
-                //                .add("\n")
-                .add(logo);
-        documento.add(parrafo);
-        Table tabla = new Table(new float[]{2, 4, 4});
-        tabla.setWidth(100);
-
-        documento.close();
     }
 
     /**
@@ -511,6 +535,7 @@ public class Reportes extends javax.swing.JFrame {
         txtNombre = new javax.swing.JTextField();
         btnGenerarReporte = new javax.swing.JButton();
         btnRestablecer = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -594,6 +619,9 @@ public class Reportes extends javax.swing.JFrame {
         jScrollPane2.setViewportView(txtDescripcion);
 
         btnFiltrar.setText("Filtrar");
+        btnFiltrar.setMaximumSize(new java.awt.Dimension(111, 23));
+        btnFiltrar.setMinimumSize(new java.awt.Dimension(111, 23));
+        btnFiltrar.setPreferredSize(new java.awt.Dimension(111, 23));
         btnFiltrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFiltrarActionPerformed(evt);
@@ -607,11 +635,26 @@ public class Reportes extends javax.swing.JFrame {
         jLabel4.setText("Nombre:");
 
         btnGenerarReporte.setText("Generar reporte");
+        btnGenerarReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarReporteActionPerformed(evt);
+            }
+        });
 
         btnRestablecer.setText("Restablecer");
         btnRestablecer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRestablecerActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Cancelar");
+        jButton1.setMaximumSize(new java.awt.Dimension(111, 23));
+        jButton1.setMinimumSize(new java.awt.Dimension(111, 23));
+        jButton1.setPreferredSize(new java.awt.Dimension(111, 23));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -627,6 +670,24 @@ public class Reportes extends javax.swing.JFrame {
                 .addGap(2, 2, 2)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(324, 324, 324)
+                                .addComponent(jLabel11)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(328, 328, 328)
+                                .addComponent(cbxFechaFinal, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(etqAgregarProducto)
+                                .addGap(120, 120, 120)
+                                .addComponent(jLabel2)
+                                .addGap(87, 87, 87))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -669,37 +730,20 @@ public class Reportes extends javax.swing.JFrame {
                                 .addGap(33, 33, 33)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cbxFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtNombre))))
+                                    .addComponent(txtNombre)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(96, 96, 96)
+                                .addComponent(btnRestablecer, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(103, 103, 103)))
                         .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnGenerarReporte)
-                        .addGap(221, 221, 221))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(324, 324, 324)
-                                .addComponent(jLabel11)
-                                .addContainerGap())
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addGap(328, 328, 328)
-                                .addComponent(cbxFechaFinal, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                                .addContainerGap())
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(etqAgregarProducto)
-                                        .addGap(120, 120, 120)
-                                        .addComponent(jLabel2)
-                                        .addGap(87, 87, 87))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btnRestablecer)
-                                        .addGap(112, 112, 112)
-                                        .addComponent(btnFiltrar)
-                                        .addGap(186, 186, 186))))))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnGenerarReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(100, 100, 100)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(112, 112, 112))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -715,14 +759,12 @@ public class Reportes extends javax.swing.JFrame {
                         .addGap(31, 31, 31)
                         .addComponent(etqAgregarProducto)))
                 .addGap(2, 2, 2)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(cbxSeleccione, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addGap(6, 6, 6))
-                        .addComponent(txtClaveProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(txtClaveProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(cbxSeleccione, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(8, 8, 8)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -751,15 +793,19 @@ public class Reportes extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRestablecer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnRestablecer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnGenerarReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnGenerarReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -780,7 +826,7 @@ public class Reportes extends javax.swing.JFrame {
         // TODO add your handling code here:
         switch (opcion) {
             case " ":
-
+                LlenarTabla();
                 break;
             case "Clave producto":
                 ClaveProducto();
@@ -807,6 +853,28 @@ public class Reportes extends javax.swing.JFrame {
         // TODO add your handling code here:
         LlenarTabla();
     }//GEN-LAST:event_btnRestablecerActionPerformed
+
+    private void btnGenerarReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarReporteActionPerformed
+        try {
+            SimpleDateFormat f = new SimpleDateFormat("dd-MM-yyyy");
+            String fInicial = f.format(cbxFechaInicio.getDate());
+            String fFinal = f.format(cbxFechaFinal.getDate());
+
+            String ruta = "C:\\Users\\Mayra\\Documents\\NetBeansProjects\\EQUIPO 4\\Equipo-04-\\gestorDeVentas - papeleria\\PFD GENERADOS\\Reporte.pdf";;
+            GenerarPDF g = new GenerarPDF();
+            g.createPDF(ruta, jTable1, fInicial, fFinal);
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_btnGenerarReporteActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Menu m = new Menu();
+        m.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -851,6 +919,7 @@ public class Reportes extends javax.swing.JFrame {
     private org.freixas.jcalendar.JCalendarCombo cbxFechaInicio;
     private javax.swing.JComboBox<String> cbxSeleccione;
     private javax.swing.JLabel etqAgregarProducto;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
