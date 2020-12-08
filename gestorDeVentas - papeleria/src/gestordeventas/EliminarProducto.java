@@ -38,10 +38,6 @@ public class EliminarProducto extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
-        etqCantidad.setVisible(false);
-        fieldCantidad.setVisible(false);
-        btnEliminar.setVisible(false);
-        acc = accion;
         fieldCantidad.setEnabled(false);
         btnEliminar.setEnabled(false);
     }
