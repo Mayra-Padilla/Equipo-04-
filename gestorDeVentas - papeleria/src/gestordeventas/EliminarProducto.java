@@ -8,9 +8,11 @@ package gestordeventas;
 import gestordeventas.Conexion.conexion;
 import java.awt.HeadlessException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,7 +23,7 @@ public class EliminarProducto extends javax.swing.JFrame {
 
     conexion conecion = new conexion();
     Connection cin = conexion.getConexion();
-    Statement ps;
+    PreparedStatement ps;
     ResultSet rs;
     int acc;
 
@@ -40,6 +42,8 @@ public class EliminarProducto extends javax.swing.JFrame {
         fieldCantidad.setVisible(false);
         btnEliminar.setVisible(false);
         acc = accion;
+        fieldCantidad.setEnabled(false);
+        btnEliminar.setEnabled(false);
     }
 
     /**
@@ -162,41 +166,35 @@ public class EliminarProducto extends javax.swing.JFrame {
                 .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(etqAgregarProducto)
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(etqAgregarProducto)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel2))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(46, 46, 46)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(btnSi)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(btnNo)
-                                                .addGap(38, 38, 38))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(etqCantidad)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(fieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addComponent(jLabel2))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(42, 42, 42)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel3)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(fieldClave, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addContainerGap(17, Short.MAX_VALUE))
+                                .addGap(71, 71, 71)
+                                .addComponent(btnSi)
+                                .addGap(41, 41, 41)
+                                .addComponent(btnNo))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(btnEliminar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCancelar)
-                        .addGap(65, 65, 65))))
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(fieldClave, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel3))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(etqCantidad)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(fieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnCancelar)
+                            .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,31 +204,29 @@ public class EliminarProducto extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addComponent(etqAgregarProducto)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(fieldClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(54, 54, 54)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(fieldClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNo)
+                    .addComponent(btnSi))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSi)
-                    .addComponent(btnNo))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(etqCantidad)
-                    .addComponent(fieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancelar)
+                    .addComponent(fieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminar))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCancelar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -239,105 +235,146 @@ public class EliminarProducto extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiActionPerformed
-        // TODO add your handling code here:
-        String codigoproducto = fieldClave.getText();
-        if (isNumeric(codigoproducto) == true) {
-            try {
-                String consulta = "DELETE FROM Materiales WHERE Cod_Producto = "
-                        + codigoproducto;
-                ps = cin.createStatement();
+         // TODO add your handling code here:
 
-                if (!ps.execute(consulta)) {
-                    JOptionPane.showMessageDialog(this, "Producto eliminado correctamente.", "Exitoso", JOptionPane.OK_OPTION);
+        int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de dar de baja del inventario el material?");
+        switch (resp) {
+            case 2:
+                Menu menu = new Menu();
+                menu.setVisible(true);
+                this.dispose();
+                break;
+            case 1:
+                fieldClave.setText(null);
+                fieldClave.requestFocus();
+                break;
+            case 0:
+                Date date = new Date();
+                String fecha = new SimpleDateFormat("yyyy-MM-dd").format(date);
+                fieldCantidad.setEnabled(false);
+                btnEliminar.setEnabled(false);
+                fieldClave.setEnabled(true);
+                btnSi.setEnabled(true);
+                String codigoproducto = fieldClave.getText();
+                codigoproducto = codigoproducto.trim();
+                if (isNumeric(codigoproducto) == true) {
+                    try {
+                        String consulta = "DELETE FROM Materiales WHERE Cod_Producto = "
+                                + codigoproducto;
+                        ps = cin.prepareStatement(consulta);
+                        if (ps.executeUpdate() > 0) {
+                            String cons = "INSERT INTO Eliminar (Cod_Producto, Fecha_Baja) VALUES (" + codigoproducto + ",'" + fecha + "')";
+                            ps = cin.prepareStatement(cons);
+                            if (ps.executeUpdate() > 0) {
+                                
+                            }
+                            JOptionPane.showMessageDialog(this, "Producto eliminado correctamente.");
+                            fieldClave.setText(null);
+                        } else {
+                            JOptionPane.showMessageDialog(this, "La Clave del producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                            fieldClave.requestFocus();
+                        }
+                    } catch (HeadlessException | SQLException e) {
+                        JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)" + e, "Error", JOptionPane.ERROR_MESSAGE);
+                        fieldClave.requestFocus();
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(this, "El Codigo de producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "La Clave del producto es obligatoria (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
+                    fieldClave.requestFocus();
                 }
-            } catch (HeadlessException | SQLException e) {
-                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-
-            fieldClave.setText(null);
-            fieldClave.requestFocus();
-
-        } else {
-            JOptionPane.showMessageDialog(this, "El Codigo producto es obligatorio (Solo Numeros)", "Error", JOptionPane.ERROR_MESSAGE);
-            fieldClave.setText(null);
-            fieldClave.requestFocus();
+                break;
+            default:
+                break;
         }
     }//GEN-LAST:event_btnSiActionPerformed
 
     private void btnNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNoActionPerformed
-        // TODO add your handling code here:
-        btnSi.setEnabled(false);
-        etqCantidad.setVisible(true);
-        fieldCantidad.setVisible(true);
-        btnEliminar.setVisible(true);
+         // TODO add your handling code here:
+        String codigoproducto = fieldClave.getText();
+        codigoproducto = codigoproducto.trim();
+        if (isNumeric(codigoproducto) == true) {
+            fieldCantidad.setEnabled(true);
+            btnEliminar.setEnabled(true);
+            fieldClave.setEnabled(false);
+            btnSi.setEnabled(false);
+            btnNo.setEnabled(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "La Clave del producto es obligatoria (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
+            fieldClave.requestFocus();
+        }
     }//GEN-LAST:event_btnNoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        if (acc == 0) {
-            Menu menu = new Menu();
-            menu.setVisible(true);
-            this.dispose();
-        } else {
-            Inventario i = new Inventario();
-            i.setVisible(true);
-            this.dispose();
-        }
+        Menu menu = new Menu();
+        menu.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
+        int canti = 0;
         String cantidad = fieldCantidad.getText();
         String codigo = fieldClave.getText();
+        cantidad = cantidad.trim();
+        codigo = codigo.trim();
 
-        if (isNumeric(codigo) == false) {
-            JOptionPane.showMessageDialog(this, "El Codigo producto es obligatorio (Solo Numeros)", "Error", JOptionPane.ERROR_MESSAGE);
-            fieldClave.setText(null);
+        if (isNumeric(codigo) == false || codigo.length() == 0) {
+            JOptionPane.showMessageDialog(this, "La Clave del producto es obligatoria (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
             fieldClave.requestFocus();
         } else if (isNumeric(cantidad) == false || cantidad.length() == 0) {
-            JOptionPane.showMessageDialog(this, "Las Existencias son obligatorias (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
-            fieldCantidad.setText(null);
+            JOptionPane.showMessageDialog(this, "Las Existencias son obligatorias (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
             fieldCantidad.requestFocus();
         } else {
-
             try {
-                String consulta = "UPDATE Materiales SET Existencias = "
-                        + "Existencias - " + cantidad + "WHERE Cod_Producto ="
-                        + codigo;
-                ps = cin.createStatement();
+                String primero = "SELECT Existencias FROM Materiales WHERE Cod_Producto = " + codigo;
+                ps = cin.prepareStatement(primero);
+                rs = ps.executeQuery();
+                if (rs.next() == true) {
+                    String cant = rs.getString("Existencias");
+                    canti = Integer.parseInt(cant);
 
-                if (!ps.execute(consulta)) {
-                    JOptionPane.showMessageDialog(this, "Material eliminado correctamente.", "Exitoso", JOptionPane.OK_OPTION);
+                    int existencias = Integer.parseInt(cantidad);
+                    if (existencias <= canti) {
+                        String consulta = "UPDATE Materiales SET Existencias = "
+                                + "Existencias - " + cantidad + "WHERE Cod_Producto ="
+                                + codigo;
+                        ps = cin.prepareStatement(consulta);
+                        if (ps.executeUpdate() > 0) {
+                            JOptionPane.showMessageDialog(this, "Producto eliminado correctamente.");
+                            btnSi.setEnabled(true);
+                            btnNo.setEnabled(true);
+                            fieldCantidad.setEnabled(false);
+                            fieldCantidad.setText(null);
+                            btnEliminar.setEnabled(false);
+                            fieldClave.requestFocus();
+                            fieldClave.setEnabled(true);
+                            fieldClave.setText(null);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "No puede eliminar mas de lo que hay en almacen", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(this, "El Codigo de producto no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "La Clave del producto no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                    fieldClave.setEnabled(true);
+                    fieldClave.requestFocus();
+                    btnNo.setEnabled(false);
+                    fieldCantidad.setText(null);
                 }
-
             } catch (HeadlessException | SQLException e) {
-                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
             }
-
-            btnSi.setEnabled(true);
-            etqCantidad.setVisible(false);
-            fieldCantidad.setVisible(false);
-            btnEliminar.setVisible(false);
-            fieldCantidad.setText(null);
-            fieldClave.setText(null);
-            fieldClave.requestFocus();
         }
-
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
@@ -369,6 +406,7 @@ public class EliminarProducto extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new EliminarProducto(0).setVisible(true);
             }

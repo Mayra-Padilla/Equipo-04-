@@ -110,7 +110,7 @@ public class Inventario extends javax.swing.JFrame {
                 modelo.addRow(filas);
             }
         } catch (HeadlessException | NumberFormatException | SQLException e) {
-            JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -421,16 +421,16 @@ public class Inventario extends javax.swing.JFrame {
                 }
 
                 if (filas[0] == null) {
-                    JOptionPane.showMessageDialog(this, "El Codigo del producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "El Código del producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
                     claveabuscar.requestFocus();
                 }
                 claveabuscar.setText(null);
                 claveabuscar.requestFocus();
             } catch (HeadlessException | NumberFormatException | SQLException e) {
-                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "El Codigo producto es obligatorio (Solo Numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Código del producto es obligatorio (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
             claveabuscar.setText(null);
             claveabuscar.requestFocus();
         }
@@ -441,7 +441,7 @@ public class Inventario extends javax.swing.JFrame {
         nombre = nombre.trim();
 
         if (nombre.length() > 51 || nombre.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Máximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             nombreabuscar.requestFocus();
         } else {
             try {
@@ -479,7 +479,7 @@ public class Inventario extends javax.swing.JFrame {
                 nombreabuscar.setText(null);
                 nombreabuscar.requestFocus();
             } catch (HeadlessException | NumberFormatException | SQLException e) {
-                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
 

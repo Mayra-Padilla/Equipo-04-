@@ -442,19 +442,19 @@ public class ModificarProducto extends javax.swing.JFrame {
         descripcion = descripcion.trim();
 
         if (nombreproducto.length() > 51 || nombreproducto.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Maximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio (Máximo 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             txtNombreProducto.requestFocus();
         } else if (isNumeric(existencias) == false || existencias.length() == 0) {
-            JOptionPane.showMessageDialog(this, "Las Existencias son obligatorias (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Las Existencias son obligatorias (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
             txtExistencias.requestFocus();
         } else if (isDouble(compra) == false || compra.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El Precio de compra es obligatorio (Solo numeros) ", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Precio de compra es obligatorio (Solo números) ", "Error", JOptionPane.ERROR_MESSAGE);
             txtPrecioCompra.requestFocus();
         } else if (isDouble(venta) == false || venta.length() == 0) {
-            JOptionPane.showMessageDialog(this, "El Precio de venta es obligatorio (Solo numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Precio de venta es obligatorio (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
             txtPrecioVenta.requestFocus();
         } else if (descripcion.length() > 36) {
-            JOptionPane.showMessageDialog(this, "La descripción tiene un maximo de 35 caracteres", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "La descripción tiene un máximo de 35 caracteres", "Error", JOptionPane.ERROR_MESSAGE);
             txtDescripcion.requestFocus();
         } else {
             try {
@@ -464,7 +464,7 @@ public class ModificarProducto extends javax.swing.JFrame {
                         + "' WHERE Cod_Producto = " + codigoproducto;
                 ps = cin.prepareStatement(consulta);
                 if (ps.executeUpdate() > 0) {
-                    JOptionPane.showMessageDialog(this, "Material modificado con exito");
+                    JOptionPane.showMessageDialog(this, "Material modificado con éxito");
                     txtNombreProducto.setEnabled(false);
                     txtExistencias.setEnabled(false);
                     txtPrecioCompra.setEnabled(false);
@@ -476,10 +476,10 @@ public class ModificarProducto extends javax.swing.JFrame {
                     btnBuscar.setEnabled(true);
 
                 } else {
-                    JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (HeadlessException | NumberFormatException | SQLException e) {
-                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
             }
             txtCodigoProducto.setText(null);
             txtExistencias.setText(null);
@@ -525,14 +525,14 @@ public class ModificarProducto extends javax.swing.JFrame {
                     txtDescripcion.setText(rs.getString("Descripcion"));
 
                 } else {
-                    JOptionPane.showMessageDialog(this, "El Codigo de producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "El Código de producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (HeadlessException | SQLException e) {
-                JOptionPane.showMessageDialog(this, "Ocurrio un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocurrió un error (Revise sus datos)", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         } else {
-            JOptionPane.showMessageDialog(this, "El Codigo producto es obligatorio (Solo Numeros)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Código de producto es obligatorio (Solo números)", "Error", JOptionPane.ERROR_MESSAGE);
             txtCodigoProducto.setText(null);
             txtCodigoProducto.requestFocus();
         }
