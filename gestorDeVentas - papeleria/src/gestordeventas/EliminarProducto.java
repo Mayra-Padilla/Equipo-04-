@@ -37,7 +37,8 @@ public class EliminarProducto extends javax.swing.JFrame {
 //        getContentPane().setLayout(null);
         setLocationRelativeTo(null);
         setResizable(false);
-
+        acc = accion;
+        
         fieldCantidad.setEnabled(false);
         btnEliminar.setEnabled(false);
     }
@@ -312,9 +313,15 @@ public class EliminarProducto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        Menu menu = new Menu();
-        menu.setVisible(true);
-        this.dispose();
+        if (acc == 0) {
+            Menu menu = new Menu();
+            menu.setVisible(true);
+            this.dispose();
+        } else {
+            Inventario i = new Inventario();
+            i.setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
