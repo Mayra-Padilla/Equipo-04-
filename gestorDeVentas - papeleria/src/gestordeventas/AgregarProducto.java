@@ -411,7 +411,6 @@ public class AgregarProducto extends javax.swing.JFrame {
             i.setVisible(true);
             this.dispose();
         }
-
     }//GEN-LAST:event_botonCancelarActionPerformed
 
     private void txtNombreProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreProductoActionPerformed
